@@ -1,0 +1,44 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build": "gulp build:prod",
+    "lint": "tslint --fix --exclude ./src/**/config.* ./src/**/*.ts",
+    "start": "gulp build:dev & node ./dist/app.js",
+    "test": "gulp build:dev & mocha --timeout=5000 ./dist/**/*.test.js & gulp clean:js",
+    "cover": "gulp build:dev & istanbul cover node_modules/mocha/bin/_mocha --root ./dist ./dist/**/*.test.js & gulp clean:js"
+  },
+  "author": "Barend Erasmus",
+  "license": "MIT",
+  "dependencies": {
+    "co": "^4.6.0",
+    "express": "^4.14.0",
+    "express-handlebars": "^3.0.0",
+    "express-winston": "^2.3.0",
+    "request": "^2.81.0",
+    "utf8": "^2.1.2",
+    "uuid": "^3.0.1",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.38",
+    "@types/node": "^7.0.1",
+    "@types/sinon": "^2.1.2",
+    "@types/winston": "^2.2.0",
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-tslint": "^7.1.0",
+    "gulp-typescript": "^3.1.4",
+    "gulp-watch": "^4.3.11",
+    "mocha": "^3.2.0",
+    "run-sequence": "^1.2.2",
+    "sinon": "^2.1.0",
+    "tslint": "^5.0.0",
+    "typescript": "^2.1.5"
+  }
+}
