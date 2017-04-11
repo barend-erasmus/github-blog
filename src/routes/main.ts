@@ -7,11 +7,26 @@ import { config } from './../config';
 // Imports repositories
 
 // Imports services
+import { PostService } from './../services/post';
 
 const router = express.Router();
 
 router.get('/', (req: Request, res: Response, next: () => void) => {
-    res.render('home');
+    const postService = new PostService();
+
+    res.render('home', {
+        posts: postService.listPosts(),
+    });
+});
+
+router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
+    const postService = new PostService();
+
+    postService.findPost(req.params.id).then((post: any) => {
+        res.render('post', {
+            post
+      ,  });
+    });
 });
 
 export = router;
