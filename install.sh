@@ -21,9 +21,6 @@ npm install -g gulp
 # Clone 'github-blog' repository
 git clone https://github.com/developersworkspace/github-blog.git
 
-# Replace domain
-sed -i -- "s/yourdomain.com/$domain/g" ./github-blog/nginx.conf
-
 # Change directory to 'web'
 cd ./github-blog
 
@@ -34,10 +31,10 @@ npm install
 npm run build
 
 # Build docker image
-docker build --no-cache - github-blog ./
+docker build --no-cache -t github_blog ./
 
 # Run docker as deamon
-docker run -d -p 3000:3000 -t github-blog
+docker run -d -p 3000:3000 -t github_blog
 
 # -- INSTALL SSL CERT --
 
@@ -65,7 +62,10 @@ sudo apt-get install -y nginx
 sudo ufw allow 'Nginx HTTP'
 
 # Download nginx.conf to NGINX directory
-curl -o /etc/nginx/nginx.conf https://raw.githubusercontent.com/developersworkspace/gihub-blog/master/nginx.conf
+curl -o /etc/nginx/nginx.conf https://raw.githubusercontent.com/developersworkspace/github-blog/master/nginx.conf
+
+# Replace domain
+sed -i -- "s/yourdomain.com/$domain/g" /etc/nginx/nginx.conf
 
 # Restart NGINX
 systemctl restart nginx

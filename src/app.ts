@@ -5,6 +5,7 @@ import path = require('path');
 // Imports middleware
 import expressWinston = require('express-winston');
 import exphbs = require('express-handlebars');
+import robots = require('express-robots');
 
 // Imports routes
 import mainRoute = require('./routes/main');
@@ -40,6 +41,8 @@ export class WebApi {
 
         app.set('views', path.join(__dirname, 'views'));
         app.set('view engine', 'handlebars');
+
+        app.use(robots({UserAgent: '*', Disallow: ''}))
 
         // Configure express-winston
         app.use(expressWinston.logger({

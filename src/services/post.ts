@@ -21,6 +21,17 @@ export class PostService {
                 name: 'Barend Erasmus',
                 uri: 'https://avatars2.githubusercontent.com/u/17405891?v=3&s=460',
             },
+            description: 'Visualize the latest trends recommended by the community.',
+            id: 'tech-radar',
+            timestamp: '17 March 2017',
+            title: 'Tech Radar',
+            uri: 'https://raw.githubusercontent.com/developersworkspace/TechRadar/master/README.md',
+        },
+        {
+            author: {
+                name: 'Barend Erasmus',
+                uri: 'https://avatars2.githubusercontent.com/u/17405891?v=3&s=460',
+            },
             description: 'Have you ever wondered how DNS works?',
             id: 'how-does-dns-work',
             timestamp: '2 March 2017',

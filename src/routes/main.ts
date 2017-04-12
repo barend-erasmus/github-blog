@@ -25,6 +25,12 @@ router.get('/about', (req: Request, res: Response, next: () => void) => {
     res.render('about');
 });
 
+router.get('/contact', (req: Request, res: Response, next: () => void) => {
+    const postService = new PostService();
+
+    res.render('contact');
+});
+
 router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
     const postService = new PostService();
 
