@@ -110,7 +110,7 @@ export class PostService {
                     reject(error);
                     return;
                 }
-
+                
                 resolve({
                     author: post.author,
                     description: post.description,
