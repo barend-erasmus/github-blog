@@ -24,10 +24,10 @@
     <div class="row">
         <div class="col-xs-12 single-content">
             <p class="meta">
-                <a class="" href="#">{{value.author.name}}</a>
+                <a class="" href="#">{{post.author}}</a>
             </p>
 
-            {{{post.html}}}
+            {{{post.body}}}
 
         </div>
         <!-- main-content/col -->
@@ -41,12 +41,12 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-2">
-                <img src="{{post.author.uri}}" class="user-icon " alt="user-image">
+                <img src="{{post.authorImage}}" class="user-icon " alt="user-image">
             </div>
             <div class="col-xs-12 col-sm-6">
                 <div class="category-list">
-                    <p>Published <span>{{post.timestamp}}</span></p>
-                    <p><a href="#">{{post.author.name}}</a></p>
+                    <p>Published <span>{{post.dispayTimestamp}}</span></p>
+                    <p><a href="#">{{post.author}}</a></p>
                 </div>
             </div>
             <!-- end col -->
