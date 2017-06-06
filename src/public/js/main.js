@@ -52,7 +52,7 @@ var s,
 
             var platform = el.data('platform');
             var message = el.data('message');
-            var url = el.data('url');
+            var url = el.data('url')? el.data('url') : window.location;
 
             if (platform == 'mail'){
                 // Let mail use default browser behaviour
@@ -71,7 +71,9 @@ var s,
                 popUrl = 'http://twitter.com/home?status=' + encodeURI(message) + '+' + url;
 
             } else if(platform == 'facebook'){
-                popUrl = 'http://www.facebook.com/share.php?u' + url + '&amp;title=' + encodeURI(message);
+                popUrl = 'http://www.facebook.com/share.php?u' + url + '&title=' + encodeURI(message);
+            }else if(platform == 'linkedin'){
+                popUrl = 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + encodeURI(message)
             }
             newWindow = window.open(popUrl,'name','height=500,width=600');
             if (window.focus) { newWindow.focus(); }
