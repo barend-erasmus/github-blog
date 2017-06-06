@@ -1,0 +1,34 @@
+{
+    "machine": {
+        "host": "$host",
+        "username": "$username",
+        "password": "$password"
+    },
+    "commands": [
+        "sudo apt-get update",
+        "curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -",
+        "sudo apt-get install -y nodejs",
+
+        "npm --prefix /opt/github-blog install",
+        "docker stop github-blog",
+        "docker rm github-blog",
+        "docker build --no-cache -t cgithub-blog /docker-uploads/github-blog",
+        "docker run -d -p 8080:3000 --name github-blog -v /logs:/logs -v /opt/github-blog/opt/github-blog -t github-blog"
+    ],
+    "directories": [
+        {
+            "source": "$workspace/src",
+            "destination": "/opt/github-blog/src"
+        }
+    ],
+    "files": [
+        {
+            "source": "$workspace/package.json",
+            "destination": "/opt/github-blog/package.json"
+        },
+        {
+            "source": "$workspace/Dockerfile",
+            "destination": "/docker-uploads/github-blog/Dockerfile"
+        }
+    ]
+}

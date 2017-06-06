@@ -9,13 +9,19 @@ import { config } from './../config';
 // Imports services
 import { PostService } from './../services/post';
 
+// Imports models
+import { Post } from './../models/post';
+
 const router = express.Router();
 
 router.get('/', (req: Request, res: Response, next: () => void) => {
     const postService = new PostService();
 
-    res.render('home', {
-        posts: postService.listPosts(),
+
+    postService.listPosts().then((posts: Post[]) => {
+        res.render('home', {
+            posts: posts,
+        });
     });
 });
 
@@ -36,8 +42,8 @@ router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
 
     postService.findPost(req.params.id).then((post: any) => {
         res.render('post', {
-            post
-      ,  });
+            post,
+        });
     });
 });
 

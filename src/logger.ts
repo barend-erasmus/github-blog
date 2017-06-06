@@ -2,8 +2,14 @@
 import * as path from 'path';
 import * as winston from 'winston';
 
-// Imports configuration
-import { config } from './config';
+// Import configurations
+let config = require('./config').config;
+
+const argv = require('yargs').argv;
+
+if (argv.prod) {
+  config = require('./config.prod').config;
+}
 
 const logger = new (winston.Logger)({
   transports: [
