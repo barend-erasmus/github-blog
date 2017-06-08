@@ -21,6 +21,7 @@ router.get('/', (req: Request, res: Response, next: () => void) => {
     postService.listPosts().then((posts: Post[]) => {
         res.render('home', {
             posts: posts,
+            title: 'Home'
         });
     });
 });
@@ -28,13 +29,17 @@ router.get('/', (req: Request, res: Response, next: () => void) => {
 router.get('/about', (req: Request, res: Response, next: () => void) => {
     const postService = new PostService();
 
-    res.render('about');
+    res.render('about', {
+        title: 'About'
+    });
 });
 
 router.get('/contact', (req: Request, res: Response, next: () => void) => {
     const postService = new PostService();
 
-    res.render('contact');
+    res.render('contact', {
+        title: 'Contact'
+    });
 });
 
 router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
@@ -43,6 +48,7 @@ router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
     postService.findPost(req.params.id).then((post: any) => {
         res.render('post', {
             post,
+            title: post.title
         });
     });
 });
