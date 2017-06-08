@@ -71,7 +71,7 @@ var s,
                 popUrl = 'http://twitter.com/home?status=' + encodeURI(message) + '+' + url;
 
             } else if(platform == 'facebook'){
-                popUrl = 'http://www.facebook.com/share.php?u' + url + '&title=' + encodeURI(message);
+                popUrl = 'http://www.facebook.com/share.php?u=' + url + '&title=' + encodeURI(message);
             }else if(platform == 'linkedin'){
                 popUrl = 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + encodeURI(message)
             }
