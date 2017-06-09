@@ -8,13 +8,16 @@ import rp = require('request-promise');
 import fs = require('graceful-fs');
 import moment = require('moment');
 
+// Imports logger
+import { logger } from './../logger';
+
 // Import configurations
 let config = require('./../config').config;
 
 const argv = require('yargs').argv;
 
 if (argv.prod) {
-  config = require('./../config.prod').config;
+    config = require('./../config.prod').config;
 }
 
 // Imports models
@@ -31,14 +34,57 @@ export class PostService {
         return co(function* () {
 
             const posts: Post[] = [];
+            let jsonFilename = path.join(config.tempDir, moment().format('YYYY-MM-DD-HH') + '.json');
+
+            const files: string[] = fs.readdirSync(config.tempDir).filter((x) => x !== '.gitkeep').sort();
+
+            if (files.length === 0) {
+                yield self.scrapeGithub();
+            }
+
+            if (!fs.existsSync(jsonFilename)) {
+                self.scrapeGithub();
+
+                jsonFilename = path.join(config.tempDir, files[files.length - 1]);
+            }
+
+
+            const json = fs.readFileSync(jsonFilename);
+
+            return JSON.parse(json).sort((a: Post, b: Post) => {
+                return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
+            });
+        });
+    }
+
+    public findPost(id: string): Promise<Post> {
+
+        const self = this;
+
+        return co(function* () {
+            const posts: Post[] = yield self.listPosts();
+
+            const post = posts.find((x) => x.id === id);
+
+            const md = new MarkdownIt();
+
+            post.body = md.render(post.body);
+
+            return post;
+
+        });
+    }
+
+    private scrapeGithub(): Promise<void> {
+        const self = this;
+
+        return co(function* () {
+
+            const posts: Post[] = [];
             const jsonFilename = path.join(config.tempDir, moment().format('YYYY-MM-DD-HH') + '.json');
 
             if (fs.existsSync(jsonFilename)) {
-                const json = fs.readFileSync(jsonFilename);
-
-                return JSON.parse(json).sort((a: Post, b: Post) => {
-                    return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
-                });
+                return;
             }
 
             for (const username of self.users) {
@@ -94,36 +140,11 @@ export class PostService {
             }
 
             if (!fs.existsSync(jsonFilename)) {
-                fs.writeFile(jsonFilename, JSON.stringify(posts), (err: Error) => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                    }
-                });
+                fs.writeFileSync(jsonFilename, JSON.stringify(posts));
             }
 
 
-            return posts.sort((a: Post, b: Post) => {
-                return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
-            });
-        });
-    }
-
-    public findPost(id: string): Promise<Post> {
-
-        const self = this;
-
-        return co(function* () {
-            const posts: Post[] = yield self.listPosts();
-
-            const post = posts.find((x) => x.id === id);
-
-            const md = new MarkdownIt();
-
-            post.body = md.render(post.body);
-
-            return post;
-
+            return;
         });
     }
 
