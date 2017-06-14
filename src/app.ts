@@ -40,6 +40,9 @@ export class WebApi {
 
     private configureMiddleware(app: express.Express) {
 
+        app.disable('x-powered-by');
+
+        // Configure view engine
         app.engine('handlebars', exphbs({
             defaultLayout: 'main',
             layoutsDir: path.join(__dirname, 'views/layouts'),
@@ -48,6 +51,8 @@ export class WebApi {
         app.set('views', path.join(__dirname, 'views'));
         app.set('view engine', 'handlebars');
 
+
+        // Configure robots file
         app.use(robots({UserAgent: '*', Disallow: ''}))
 
         // Configure express-winston
@@ -57,6 +62,8 @@ export class WebApi {
             winstonInstance: logger,
         }));
 
+
+        // Configure static content
         app.use('/static', express.static(path.join(__dirname, 'public')))
 ;    }
 
