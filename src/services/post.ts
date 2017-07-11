@@ -1,7 +1,6 @@
 // Imports
 import co = require('co');
 import path = require('path');
-import request = require('request');
 import markdown = require("markdown");
 import MarkdownIt = require('markdown-it');
 import rp = require('request-promise');
@@ -23,9 +22,13 @@ if (argv.prod) {
 // Imports models
 import { Post } from './../models/post';
 
+// Import services
+import { ShareService } from './share';
+
 export class PostService {
 
     private users: string[] = ['developersworkspace', 'barend-erasmus'];
+    private shareService = new ShareService();
 
     public listPosts(): Promise<Post[]> {
 
@@ -141,7 +144,9 @@ export class PostService {
 
                             const blogData = JSON.parse(htmlForBlogData);
 
-                            posts.push(new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlForBody, repository.owner.login, repository.owner.avatar_url, repository.pushed_at));
+                            const linkedInShareCount = yield self.shareService.linkedIn(`https://developersworkspace.co.za/post/${repository.full_name.replace('/', '-at-')}`);
+
+                            posts.push(new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlForBody, repository.owner.login, repository.owner.avatar_url, repository.pushed_at, linkedInShareCount));
                         }
                     }
 
