@@ -1,5 +1,9 @@
 // Imports
 import express = require("express");
+import * as passport from 'passport';
+import * as session from 'express-session';
+import * as cookieSession from 'cookie-session';
+import * as LinkedInStrategy from 'passport-linkedin';
 import path = require('path');
 
 // Imports middleware
@@ -19,7 +23,7 @@ let config = require('./config').config;
 const argv = require('yargs').argv;
 
 if (argv.prod) {
-  config = require('./config.prod').config;
+    config = require('./config.prod').config;
 }
 
 export class WebApi {
@@ -53,22 +57,68 @@ export class WebApi {
 
 
         // Configure robots file
-        app.use(robots({UserAgent: '*', Disallow: ''}))
+        app.use(robots({ UserAgent: '*', Disallow: '' }))
 
         // Configure express-winston
         app.use(expressWinston.logger({
-            meta: false,
+            meta: true,
             msg: 'HTTP Request: {{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}',
             winstonInstance: logger,
+            dynamicMeta: (req: express.Request, res: express.Response) => {
+                return {
+                    user: req.user ? req.user : null
+                }
+            }
         }));
 
+        // Configures session
+        app.use(session({
+            secret: 'keyboard cat',
+            resave: true,
+            saveUninitialized: true
+        }));
+
+        // Configure passport
+        app.use(passport.initialize());
+
+        passport.serializeUser((user: any, done: (err: Error, obj: any) => void) => {
+            done(null, user.displayName);
+        });
+
+        passport.deserializeUser((id: Error, done: (err: Error, obj: any) => void) => {
+            done(null, id);
+        });
+
+        app.use(passport.session());
+
+        passport.use(new LinkedInStrategy({
+            consumerKey: '861jdkiau0rqs5',
+            consumerSecret: 'x7x0u5FK5Pz9V5nB',
+            callbackURL: "https://developersworkspace.co.za/auth/linkedin/callback"
+        }, (token: string, tokenSecret: string, profile: any, done: (err: Error, obj: any) => void) => {
+            return done(null, profile);
+        }));
 
         // Configure static content
-        app.use('/static', express.static(path.join(__dirname, 'public')))
-;    }
+        app.use('/static', express.static(path.join(__dirname, 'public')));
+    }
 
     private configureRoutes(app: express.Express) {
         app.use("/", mainRoute);
+
+        app.get('/auth/linkedin', passport.authenticate('linkedin', {
+            session: true,
+            successRedirect: '/',
+            failureRedirect: '/'
+        }));
+
+        app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
+            session: true,
+            successRedirect: '/',
+            failureRedirect: '/'
+        }), (req: express.Request, res: express.Response) => {
+            res.redirect('/');
+        });
     }
 
     private configureErrorHandling(app: express.Express) {

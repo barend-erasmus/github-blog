@@ -17,6 +17,7 @@ const router = express.Router();
 router.get('/', (req: Request, res: Response, next: () => void) => {
     const postService = new PostService();
 
+    console.log(req.user);
 
     postService.listPosts().then((posts: Post[]) => {
         res.render('home', {
