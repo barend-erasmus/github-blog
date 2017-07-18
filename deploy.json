@@ -13,6 +13,7 @@
 
         "mkdir /logs",
         "npm --prefix /opt/github-blog install",
+        "pm2 stop github-blog",
         "pm2 start /opt/github-blog/src/app.js --name github-blog -- --prod --port 9001"
     ],
     "directories": [
