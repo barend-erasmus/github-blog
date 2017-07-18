@@ -13,8 +13,6 @@ export class ShareService {
                 json: true
             });
 
-            console.log(result)
-
             return result.count;
         });
     }

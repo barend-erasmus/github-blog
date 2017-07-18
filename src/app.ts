@@ -130,7 +130,7 @@ export class WebApi {
     }
 }
 
-const port = 3000;
+const port = argv.port || 3000;
 const api = new WebApi(express(), port);
 api.run();
 logger.info(`listening on ${port}`);

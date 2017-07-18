@@ -37,9 +37,9 @@ export class PostService {
         return co(function* () {
 
             const posts: Post[] = [];
-            let jsonFilename = path.join(config.tempDir, moment().utc().format('YYYY-MM-DD-HH') + '.json');
+            let jsonFilename = path.join(__dirname + '/temp', moment().utc().format('YYYY-MM-DD-HH') + '.json');
 
-            const files: string[] = fs.readdirSync(config.tempDir).filter((x) => x !== '.gitkeep').sort();
+            const files: string[] = fs.readdirSync(__dirname + '/temp').filter((x) => x !== '.gitkeep').sort();
 
             if (files.length === 0) {
                 yield self.scrapeGithub();
@@ -48,7 +48,7 @@ export class PostService {
             if (!fs.existsSync(jsonFilename)) {
                 self.scrapeGithub();
 
-                jsonFilename = path.join(config.tempDir, files[files.length - 1]);
+                jsonFilename = path.join(__dirname + '/temp', files[files.length - 1]);
             }
 
 
@@ -84,7 +84,7 @@ export class PostService {
         return co(function* () {
 
             const posts: Post[] = [];
-            const jsonFilename = path.join(config.tempDir, moment().utc().format('YYYY-MM-DD-HH') + '.json');
+            const jsonFilename = path.join(__dirname + '/temp', moment().utc().format('YYYY-MM-DD-HH') + '.json');
 
             if (fs.existsSync(jsonFilename)) {
                 return;
