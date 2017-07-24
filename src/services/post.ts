@@ -99,7 +99,7 @@ export class PostService {
                         uri: `https://api.github.com/users/${username}/repos?page=${page}`,
                         headers: {
                             'User-Agent': 'Request-Promise',
-                            'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6TWlkZXJpY0s5Ng=='
+                            'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng=='
                         },
                         json: true
                     });
@@ -114,7 +114,7 @@ export class PostService {
                             uri: `${repository.url}/contents`,
                             headers: {
                                 'User-Agent': 'Request-Promise',
-                                'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6TWlkZXJpY0s5Ng=='
+                                'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng=='
                             },
                             json: true
                         });
@@ -129,7 +129,7 @@ export class PostService {
                                 uri: `${readmeFile.download_url}`,
                                 headers: {
                                     'User-Agent': 'Request-Promise',
-                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6TWlkZXJpY0s5Ng=='
+                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng=='
                                 }
                             });
 
@@ -138,7 +138,7 @@ export class PostService {
                                 uri: `${blogDataFile.download_url}`,
                                 headers: {
                                     'User-Agent': 'Request-Promise',
-                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6TWlkZXJpY0s5Ng=='
+                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng=='
                                 }
                             });
 

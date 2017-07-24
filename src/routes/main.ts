@@ -35,6 +35,15 @@ router.get('/about', (req: Request, res: Response, next: () => void) => {
     });
 });
 
+router.get('/projects', (req: Request, res: Response, next: () => void) => {
+    const postService = new PostService();
+
+    res.render('projects', {
+        title: 'Projects',
+        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.'
+    });
+});
+
 router.get('/contact', (req: Request, res: Response, next: () => void) => {
     const postService = new PostService();
 
