@@ -65,4 +65,13 @@ router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
     });
 });
 
+router.get('/projects/url-shortener', (req: Request, res: Response, next: () => void) => {
+    const postService = new PostService();
+
+    res.render('./projects/url-shortener', {
+        title: 'URL Shortener',
+        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.'
+    });
+});
+
 export = router;
