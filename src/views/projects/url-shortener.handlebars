@@ -1,3 +1,4 @@
+<script src="/static/js/projects/url-shortener.js"></script>
 <main class="container left-container">
     <div class="row">
 
@@ -31,7 +32,6 @@
                 <div class="primary-info">
                     <h1>URL Shortener</h1>
                     <p>Customizable Shortened Links</p>
-
                 </div>
             </div>
 
@@ -41,28 +41,57 @@
 
             <h3>URL Shortener</h3>
 
-            <div>
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" placeholder="Name" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Shortened URL</label>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">https://url-shortener.openservices.co.za/</span>
-                        <input type="text" placeholder="my-test-url" class="form-control">
+            <div class="panel panel-default">
+                <div class="panel-heading">Create Profile</div>
+                <div class="panel-body">
+                    <div id="createProfile">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" placeholder="Name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input class="btn btn-default" onclick="createProfile()" type="button" value="Create">
+                        </div>
+                        <label id="result"></label>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label>URL</label>
-                    <input type="text" placeholder="https://example.com/hello-world" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input class="btn btn-default" type="submit" value="Shorten">
                 </div>
             </div>
 
+            <div class="panel panel-default">
+                <div class="panel-heading">Create URL</div>
+                <div class="panel-body">
+                    <div id="createUrl">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" placeholder="Name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Profile Key</label>
+                            <input type="text" name="profileKey" placeholder="1PrdZbex" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Shortened URL</label>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1">https://url-shortener.openservices.co.za/</span>
+                                <input type="text" name="shortUrl" placeholder="my-test-url" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>URL</label>
+                            <input type="text" name="url" placeholder="https://example.com/hello-world" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input class="btn btn-default" onclick="createUrl()" type="button" value="Generate">
+                        </div>
+                        <label id="result"></label>
+                    </div>
+                </div>
+            </div>
+
+
             <footer class="split-footer">
+                <a target="_blank" href="https://url-shortener.openservices.co.za/api/docs/">API Docs</a>
+                <i class="link-spacer"></i>
                 <a href="/about">About</a>
                 <i class="link-spacer"></i>
                 <a href="/">Developer's Workspace Pty Ltd 2017</a>
