@@ -1,10 +1,12 @@
 // Imports
 import express = require("express");
 import * as passport from 'passport';
-import * as session from 'express-session';
 import * as cookieSession from 'cookie-session';
 import * as LinkedInStrategy from 'passport-linkedin';
+import * as GithubStrategy from 'passport-github';
+import * as GoogleStrategy from 'passport-google-oauth20';
 import path = require('path');
+const argv = require('yargs').argv;
 
 // Imports middleware
 import expressWinston = require('express-winston');
@@ -16,15 +18,6 @@ import mainRoute = require('./routes/main');
 
 // Imports logger
 import { logger } from './logger';
-
-// Import configurations
-let config = require('./config').config;
-
-const argv = require('yargs').argv;
-
-if (argv.prod) {
-    config = require('./config.prod').config;
-}
 
 export class WebApi {
 
@@ -72,10 +65,10 @@ export class WebApi {
         }));
 
         // Configures session
-        app.use(session({
-            secret: 'keyboard cat',
-            resave: true,
-            saveUninitialized: true
+        app.use(cookieSession({
+            name: 'session',
+            keys: ['J#Z!AL6ZbZ3kzPCJ'],
+            maxAge: 24 * 60 * 60 * 1000
         }));
 
         // Configure passport
@@ -94,8 +87,24 @@ export class WebApi {
         passport.use(new LinkedInStrategy({
             consumerKey: '861jdkiau0rqs5',
             consumerSecret: 'x7x0u5FK5Pz9V5nB',
-            callbackURL: "https://developersworkspace.co.za/auth/linkedin/callback"
+            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/linkedin/callback" : "http://localhost:3000/auth/linkedin/callback"
         }, (token: string, tokenSecret: string, profile: any, done: (err: Error, obj: any) => void) => {
+            return done(null, profile);
+        }));
+
+        passport.use(new GoogleStrategy({
+            clientID: '747263281118-2gquah79jdtp5l6k7flonm694msp7254.apps.googleusercontent.com',
+            clientSecret: '2fcRUL7yghAtGE5mU9_1WUqA',
+            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/google/callback" : "http://localhost:3000/auth/google/callback"
+        }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
+            return done(null, profile);
+        }));
+
+         passport.use(new GithubStrategy({
+            clientID: argv.prod? '2e5099132d37735f7e1e' : '1ce4c2e208e9ed338ec6',
+            clientSecret: argv.prod? '29d9ab22b8445f04808bd142dc1550adc0e0082a' : '187d1ce0e58a3708e7a9efb4c644dd14dd17d876',
+            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/github/callback" : "http://localhost:3000/auth/github/callback"
+        }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
             return done(null, profile);
         }));
 
@@ -113,6 +122,35 @@ export class WebApi {
         }));
 
         app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
+            session: true,
+            successRedirect: '/',
+            failureRedirect: '/'
+        }), (req: express.Request, res: express.Response) => {
+            res.redirect('/');
+        });
+
+        app.get('/auth/google', passport.authenticate('google', {
+            session: true,
+            successRedirect: '/',
+            failureRedirect: '/',
+            scope: ['profile']
+        }));
+
+        app.get('/auth/google/callback', passport.authenticate('google', {
+            session: true,
+            successRedirect: '/',
+            failureRedirect: '/'
+        }), (req: express.Request, res: express.Response) => {
+            res.redirect('/');
+        });
+
+        app.get('/auth/github', passport.authenticate('github', {
+            session: true,
+            successRedirect: '/',
+            failureRedirect: '/'
+        }));
+
+        app.get('/auth/github/callback', passport.authenticate('github', {
             session: true,
             successRedirect: '/',
             failureRedirect: '/'

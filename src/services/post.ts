@@ -10,15 +10,6 @@ import moment = require('moment');
 // Imports logger
 import { logger } from './../logger';
 
-// Import configurations
-let config = require('./../config').config;
-
-const argv = require('yargs').argv;
-
-if (argv.prod) {
-    config = require('./../config.prod').config;
-}
-
 // Imports models
 import { Post } from './../models/post';
 

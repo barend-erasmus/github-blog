@@ -1,6 +1,5 @@
 <main class="container left-container">
     <div class="row">
-
         <div id="menu-target">
             <ul>
                 <li><i class="fa fa-home"></i><a href="/">Home</a></li>
@@ -18,15 +17,12 @@
                 <li><i class="fa fa-github"></i><a href="https://github.com/barend-erasmus">Github (barend-erasmus)</a></li>
             </ul>
         </div>
-
         <section class="sidebar col-md-5 col-sm-12" style="background-image: url(/static/img/default-sidebar.jpg">
-
             <span class="menu-trigger animated fadeInDown">
                         <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
             </span>
-
             <div class="site-info">
                 <div class="primary-info">
                     <h1>Developer's Workspace</h1>
@@ -34,48 +30,68 @@
                 </div>
             </div>
         </section>
-        <!-- end sidebar -->
-
         <section class="col-md-7 col-sm-12 col-md-offset-5 main-content">
-
             <div class="sub-nav">
                 <a href="#" class="select-posts active">Posts</a>
             </div>
-
             <div class="home-page-posts animated fadeIn">
                 {{#each posts as |value key|}}
                 <article class="post">
                     <div class="post-preview col-xs-10  no-gutter">
                         <h2><a href="/post/{{value.id}}">{{value.title}}</a></h2>
-
                         <p>{{value.short}}</p>
-
                         <p class="meta">
                             <a href="#">{{value.author}} at {{value.displayTimestamp}}</a>
                             <br />
                             <span>{{value.linkedInShareCount}} LinkedIn Shares</span>
                         </p>
                     </div>
-
                     <div class=" col-xs-2  no-gutter">
                         <img src="{{value.authorImage}}" class="user-icon" alt="user-image">
                     </div>
                 </article>
                 {{/each}}
             </div>
-            <!-- Home page posts -->
-
             <footer class="split-footer">
                 <a href="/about">About</a>
                 <i class="link-spacer"></i>
                 <a href="/">Developer's Workspace Pty Ltd 2017</a>
             </footer>
-
         </section>
-        <!-- main content -->
-
     </div>
-    <!--/row -->
-
 </main>
-<!-- /container -->
+
+
+<div class="modal fade" id="authModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Welcome to Developer's Workspace</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="/auth/google" class="btn btn-block btn-social btn-google"><i class="fa fa-google"></i> Sign in with Google</a>
+                        <a href="/auth/linkedin" class="btn btn-block btn-social btn-linkedin"><i class="fa fa-linkedin"></i> Sign in with LinkedIn</a>
+                        <a href="/auth/github" class="btn btn-block btn-social btn-github"><i class="fa fa-github"></i> Sign in with Github</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Not Now</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/static/css/bootstrap-social.css">
+<script>
+    var user = '{{user}}';
+    $(document).ready(function () {
+        if (!user) {
+            $('#authModal').modal('show');
+        }
+    });
+
+</script>

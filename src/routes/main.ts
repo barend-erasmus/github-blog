@@ -19,6 +19,7 @@ router.get('/', (req: Request, res: Response, next: () => void) => {
 
     postService.listPosts().then((posts: Post[]) => {
         res.render('home', {
+            user: req.user,
             posts: posts,
             title: 'Home',
             description: 'Cape Town, South Africa based Software Engineer sharing knowledge, experiences and ideas.'
