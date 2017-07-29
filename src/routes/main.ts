@@ -2,9 +2,6 @@
 import { Express, Request, Response } from "express";
 import * as express from 'express';
 import * as request from 'request';
-import { config } from './../config';
-
-// Imports repositories
 
 // Imports services
 import { PostService } from './../services/post';
