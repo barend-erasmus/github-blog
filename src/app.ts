@@ -6,7 +6,17 @@ import * as LinkedInStrategy from 'passport-linkedin';
 import * as GithubStrategy from 'passport-github';
 import * as GoogleStrategy from 'passport-google-oauth20';
 import path = require('path');
-const argv = require('yargs').argv;
+import * as cron from 'cron';
+import * as co from 'co';
+import * as yargs from 'yargs';
+
+// Imports repositories
+import { PostRepository } from './repositories/sequelize/post';
+import { VisitorRepository } from './repositories/sequelize/visitor';
+
+// Imports services
+import { PostService } from './services/post';
+import { VisitorService } from './services/visitor';
 
 // Imports middleware
 import expressWinston = require('express-winston');
@@ -18,6 +28,9 @@ import mainRoute = require('./routes/main');
 
 // Imports logger
 import { logger } from './logger';
+
+
+const argv = yargs.argv;
 
 export class WebApi {
 
@@ -89,6 +102,12 @@ export class WebApi {
             consumerSecret: 'x7x0u5FK5Pz9V5nB',
             callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/linkedin/callback" : "http://localhost:3000/auth/linkedin/callback"
         }, (token: string, tokenSecret: string, profile: any, done: (err: Error, obj: any) => void) => {
+            
+            const self = this;
+            co(function*() {
+                yield self.geVistorService().login(profile.id, profile.displayName, 'LinkedIn');
+            });
+
             return done(null, profile);
         }));
 
@@ -97,19 +116,40 @@ export class WebApi {
             clientSecret: '2fcRUL7yghAtGE5mU9_1WUqA',
             callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/google/callback" : "http://localhost:3000/auth/google/callback"
         }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
+            
+            const self = this;
+            co(function*() {
+                yield self.geVistorService().login(profile.id, profile.displayName, 'Google');
+            });
+
             return done(null, profile);
         }));
 
-         passport.use(new GithubStrategy({
-            clientID: argv.prod? '2e5099132d37735f7e1e' : '1ce4c2e208e9ed338ec6',
-            clientSecret: argv.prod? '29d9ab22b8445f04808bd142dc1550adc0e0082a' : '187d1ce0e58a3708e7a9efb4c644dd14dd17d876',
+        passport.use(new GithubStrategy({
+            clientID: argv.prod ? '2e5099132d37735f7e1e' : '1ce4c2e208e9ed338ec6',
+            clientSecret: argv.prod ? '29d9ab22b8445f04808bd142dc1550adc0e0082a' : '187d1ce0e58a3708e7a9efb4c644dd14dd17d876',
             callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/github/callback" : "http://localhost:3000/auth/github/callback"
         }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
+
+            const self = this;
+            co(function*() {
+                yield self.geVistorService().login(profile.id, profile.displayName, 'Github');
+            });
+
             return done(null, profile);
         }));
 
         // Configure static content
         app.use('/static', express.static(path.join(__dirname, 'public')));
+    }
+
+    private geVistorService(): VisitorService {
+        const host = 'developersworkspace.co.za';
+        const username = 'github-blog';
+        const password = 'u?a@682P6b#F@Jj8';
+        const visitorRepository = new VisitorRepository(host, username, password);
+        const visitorService = new VisitorService(visitorRepository);
+        return visitorService;
     }
 
     private configureRoutes(app: express.Express) {
@@ -172,3 +212,19 @@ const port = argv.port || 3000;
 const api = new WebApi(express(), port);
 api.run();
 logger.info(`listening on ${port}`);
+
+
+const job = new cron.CronJob('0 */5 * * * *', () => {
+    const host = 'developersworkspace.co.za';
+    const username = 'github-blog';
+    const password = 'u?a@682P6b#F@Jj8';
+    const postRepository = new PostRepository(host, username, password);
+    const postService = new PostService(postRepository);
+
+    postService.scrapeGithub().then(() => {
+
+    });
+}, null, true);
+
+job.start();
+

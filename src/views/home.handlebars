@@ -38,8 +38,8 @@
                 {{#each posts as |value key|}}
                 <article class="post">
                     <div class="post-preview col-xs-10  no-gutter">
-                        <h2><a href="/post/{{value.id}}">{{value.title}}</a></h2>
-                        <p>{{value.short}}</p>
+                        <h2><a href="/post/{{value.key}}">{{value.title}}</a></h2>
+                        <p>{{value.description}}</p>
                         <p class="meta">
                             <a href="#">{{value.author}} at {{value.displayTimestamp}}</a>
                             <br />

@@ -3,18 +3,26 @@ import { Express, Request, Response } from "express";
 import * as express from 'express';
 import * as request from 'request';
 
+// Imports repositories
+import { PostRepository } from './../repositories/sequelize/post';
+
 // Imports services
 import { PostService } from './../services/post';
 
 // Imports models
-import { Post } from './../models/post';
+import { Post } from './../entities/post';
 
 const router = express.Router();
 
 router.get('/', (req: Request, res: Response, next: () => void) => {
-    const postService = new PostService();
 
-    postService.listPosts().then((posts: Post[]) => {
+    const host = 'developersworkspace.co.za';
+    const username = 'github-blog';
+    const password = 'u?a@682P6b#F@Jj8';
+    const postRepository = new PostRepository(host, username, password);
+    const postService = new PostService(postRepository);
+
+    postService.list().then((posts: Post[]) => {
         res.render('home', {
             user: req.user,
             posts: posts,
@@ -25,7 +33,11 @@ router.get('/', (req: Request, res: Response, next: () => void) => {
 });
 
 router.get('/about', (req: Request, res: Response, next: () => void) => {
-    const postService = new PostService();
+    const host = 'developersworkspace.co.za';
+    const username = 'github-blog';
+    const password = 'u?a@682P6b#F@Jj8';
+    const postRepository = new PostRepository(host, username, password);
+    const postService = new PostService(postRepository);
 
     res.render('about', {
         title: 'About',
@@ -34,8 +46,6 @@ router.get('/about', (req: Request, res: Response, next: () => void) => {
 });
 
 router.get('/projects', (req: Request, res: Response, next: () => void) => {
-    const postService = new PostService();
-
     res.render('projects', {
         title: 'Projects',
         description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.'
@@ -43,8 +53,6 @@ router.get('/projects', (req: Request, res: Response, next: () => void) => {
 });
 
 router.get('/contact', (req: Request, res: Response, next: () => void) => {
-    const postService = new PostService();
-
     res.render('contact', {
         title: 'Contact',
         description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.'
@@ -52,20 +60,22 @@ router.get('/contact', (req: Request, res: Response, next: () => void) => {
 });
 
 router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
-    const postService = new PostService();
+    const host = 'developersworkspace.co.za';
+    const username = 'github-blog';
+    const password = 'u?a@682P6b#F@Jj8';
+    const postRepository = new PostRepository(host, username, password);
+    const postService = new PostService(postRepository);
 
-    postService.findPost(req.params.id).then((post: Post) => {
+    postService.find(req.params.id).then((post: Post) => {
         res.render('post', {
             post,
             title: post.title,
-            description: post.short
+            description: post.description
         });
     });
 });
 
 router.get('/projects/url-shortener', (req: Request, res: Response, next: () => void) => {
-    const postService = new PostService();
-
     res.render('./projects/url-shortener', {
         title: 'URL Shortener',
         description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.'

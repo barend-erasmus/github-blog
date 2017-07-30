@@ -4,15 +4,17 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "test": "tsc & mocha ./src/**/*.test.js",
+    "coverage": "tsc & istanbul cover node_modules/mocha/bin/_mocha --root ./src ./src/**/*.test.js",
     "start": "tsc & node ./src/app.js",
-    "test": "tsc & mocha --timeout=5000 ./src/**/*.test.js",
-    "cover": "tsc & istanbul cover node_modules/mocha/bin/_mocha --root ./src ./src/**/*.test.js"
+    "deploy": "tsc & apidoc -i src/ -o apidoc/ && istanbul cover node_modules/mocha/bin/_mocha --root ./src ./src/**/*.test.js && ssh-deployer -f deploy.json --host developersworkspace.co.za --username username --password password --workspace ./"
   },
   "author": "Barend Erasmus",
   "license": "MIT",
   "dependencies": {
     "co": "^4.6.0",
     "cookie-session": "^2.0.0-beta.2",
+    "cron": "^1.2.1",
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
     "express-robots": "^0.1.6",
@@ -27,8 +29,11 @@
     "passport-google-oauth": "^1.0.0",
     "passport-google-oauth20": "^1.0.0",
     "passport-linkedin": "^1.0.0",
+    "pg": "^6.4.1",
+    "pg-hstore": "^2.3.2",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
+    "sequelize": "^4.4.2",
     "utf8": "^2.1.2",
     "uuid": "^3.0.1",
     "winston": "^2.3.1",
@@ -45,6 +50,7 @@
     "run-sequence": "^1.2.2",
     "sinon": "^2.1.0",
     "tslint": "^5.0.0",
-    "typescript": "^2.1.5"
+    "typescript": "^2.1.5",
+    "@types/sequelize": "^4.0.66"
   }
 }
