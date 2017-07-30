@@ -24,10 +24,10 @@ router.get('/', (req: Request, res: Response, next: () => void) => {
 
     postService.list().then((posts: Post[]) => {
         res.render('home', {
-            user: req.user,
-            posts: posts,
+            description: 'Cape Town, South Africa based Software Engineer sharing knowledge, experiences and ideas.',
+            posts,
             title: 'Home',
-            description: 'Cape Town, South Africa based Software Engineer sharing knowledge, experiences and ideas.'
+            user: req.user,
         });
     });
 });
@@ -40,22 +40,22 @@ router.get('/about', (req: Request, res: Response, next: () => void) => {
     const postService = new PostService(postRepository);
 
     res.render('about', {
+        description: 'What is Developer\'s Workspace all about? Developer\'s Workspace vision is to create MIT licensed software solution to allow developers to focus on their idea instead of other requirements such as authentication',
         title: 'About',
-        description: 'What is Developer\'s Workspace all about? Developer\'s Workspace vision is to create MIT licensed software solution to allow developers to focus on their idea instead of other requirements such as authentication'
     });
 });
 
 router.get('/projects', (req: Request, res: Response, next: () => void) => {
     res.render('projects', {
+        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
         title: 'Projects',
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.'
     });
 });
 
 router.get('/contact', (req: Request, res: Response, next: () => void) => {
     res.render('contact', {
+        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
         title: 'Contact',
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.'
     });
 });
 
@@ -68,17 +68,17 @@ router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
 
     postService.find(req.params.id).then((post: Post) => {
         res.render('post', {
+            description: post.description,
             post,
             title: post.title,
-            description: post.description
         });
     });
 });
 
 router.get('/projects/url-shortener', (req: Request, res: Response, next: () => void) => {
     res.render('./projects/url-shortener', {
+        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
         title: 'URL Shortener',
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.'
     });
 });
 

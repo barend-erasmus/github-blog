@@ -7,26 +7,6 @@ export class BaseRepository {
 
     private static defineModels(): void {
         const Post = BaseRepository.sequelize.define('post', {
-            key: {
-                allowNull: false,
-                type: Sequelize.STRING,
-            },
-            title: {
-                allowNull: true,
-                type: Sequelize.STRING,
-            },
-            description: {
-                allowNull: true,
-                type: Sequelize.TEXT,
-            },
-            body: {
-                allowNull: false,
-                type: Sequelize.TEXT,
-            },
-            linkedInShareCount: {
-                allowNull: false,
-                type: Sequelize.NUMERIC,
-            },
             author: {
                 allowNull: false,
                 type: Sequelize.STRING,
@@ -35,32 +15,52 @@ export class BaseRepository {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
-            publishedTimestamp: {
+            body: {
                 allowNull: false,
-                type: Sequelize.DATEONLY,
+                type: Sequelize.TEXT,
             },
-        });
-
-        const Visitor = BaseRepository.sequelize.define('visitor', {
-            username: {
-                allowNull: false,
-                type: Sequelize.STRING,
+            description: {
+                allowNull: true,
+                type: Sequelize.TEXT,
             },
             key: {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
-            type: {
+            linkedInShareCount: {
+                allowNull: false,
+                type: Sequelize.NUMERIC,
+            },
+            publishedTimestamp: {
+                allowNull: false,
+                type: Sequelize.DATEONLY,
+            },
+            title: {
+                allowNull: true,
+                type: Sequelize.STRING,
+            },
+        });
+
+        const Visitor = BaseRepository.sequelize.define('visitor', {
+            key: {
                 allowNull: false,
                 type: Sequelize.STRING,
+            },
+            lastLoginTimestamp: {
+                allowNull: false,
+                type: Sequelize.DATEONLY,
             },
             lastVisitTimestamp: {
                 allowNull: false,
                 type: Sequelize.DATEONLY,
             },
-            lastLoginTimestamp: {
+            type: {
                 allowNull: false,
-                type: Sequelize.DATEONLY,
+                type: Sequelize.STRING,
+            },
+            username: {
+                allowNull: false,
+                type: Sequelize.STRING,
             },
         });
 

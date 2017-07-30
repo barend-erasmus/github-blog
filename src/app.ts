@@ -1,13 +1,13 @@
 // Imports
 import express = require("express");
-import * as passport from 'passport';
 import * as cookieSession from 'cookie-session';
-import * as LinkedInStrategy from 'passport-linkedin';
+import * as passport from 'passport';
 import * as GithubStrategy from 'passport-github';
 import * as GoogleStrategy from 'passport-google-oauth20';
+import * as LinkedInStrategy from 'passport-linkedin';
 import path = require('path');
-import * as cron from 'cron';
 import * as co from 'co';
+import * as cron from 'cron';
 import * as yargs from 'yargs';
 
 // Imports repositories
@@ -28,7 +28,6 @@ import mainRoute = require('./routes/main');
 
 // Imports logger
 import { logger } from './logger';
-
 
 const argv = yargs.argv;
 
@@ -61,27 +60,26 @@ export class WebApi {
         app.set('views', path.join(__dirname, 'views'));
         app.set('view engine', 'handlebars');
 
-
         // Configure robots file
-        app.use(robots({ UserAgent: '*', Disallow: '' }))
+        app.use(robots({ UserAgent: '*', Disallow: '' }));
 
         // Configure express-winston
         app.use(expressWinston.logger({
+            dynamicMeta: (req: express.Request, res: express.Response) => {
+                return {
+                    user: req.user ? req.user : null,
+                };
+            },
             meta: true,
             msg: 'HTTP Request: {{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}',
             winstonInstance: logger,
-            dynamicMeta: (req: express.Request, res: express.Response) => {
-                return {
-                    user: req.user ? req.user : null
-                }
-            }
         }));
 
         // Configures session
         app.use(cookieSession({
-            name: 'session',
             keys: ['J#Z!AL6ZbZ3kzPCJ'],
-            maxAge: 24 * 60 * 60 * 1000
+            maxAge: 24 * 60 * 60 * 1000,
+            name: 'session',
         }));
 
         // Configure passport
@@ -98,13 +96,13 @@ export class WebApi {
         app.use(passport.session());
 
         passport.use(new LinkedInStrategy({
+            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/linkedin/callback" : "http://localhost:3000/auth/linkedin/callback",
             consumerKey: '861jdkiau0rqs5',
             consumerSecret: 'x7x0u5FK5Pz9V5nB',
-            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/linkedin/callback" : "http://localhost:3000/auth/linkedin/callback"
         }, (token: string, tokenSecret: string, profile: any, done: (err: Error, obj: any) => void) => {
-            
+
             const self = this;
-            co(function*() {
+            co(function* () {
                 yield self.geVistorService().login(profile.id, profile.displayName, 'LinkedIn');
             });
 
@@ -112,13 +110,13 @@ export class WebApi {
         }));
 
         passport.use(new GoogleStrategy({
+            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/google/callback" : "http://localhost:3000/auth/google/callback",
             clientID: '747263281118-2gquah79jdtp5l6k7flonm694msp7254.apps.googleusercontent.com',
             clientSecret: '2fcRUL7yghAtGE5mU9_1WUqA',
-            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/google/callback" : "http://localhost:3000/auth/google/callback"
         }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
-            
+
             const self = this;
-            co(function*() {
+            co(function* () {
                 yield self.geVistorService().login(profile.id, profile.displayName, 'Google');
             });
 
@@ -126,13 +124,13 @@ export class WebApi {
         }));
 
         passport.use(new GithubStrategy({
+            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/github/callback" : "http://localhost:3000/auth/github/callback",
             clientID: argv.prod ? '2e5099132d37735f7e1e' : '1ce4c2e208e9ed338ec6',
             clientSecret: argv.prod ? '29d9ab22b8445f04808bd142dc1550adc0e0082a' : '187d1ce0e58a3708e7a9efb4c644dd14dd17d876',
-            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/github/callback" : "http://localhost:3000/auth/github/callback"
         }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
 
             const self = this;
-            co(function*() {
+            co(function* () {
                 yield self.geVistorService().login(profile.id, profile.displayName, 'Github');
             });
 
@@ -156,44 +154,44 @@ export class WebApi {
         app.use("/", mainRoute);
 
         app.get('/auth/linkedin', passport.authenticate('linkedin', {
+            failureRedirect: '/',
             session: true,
             successRedirect: '/',
-            failureRedirect: '/'
         }));
 
         app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
+            failureRedirect: '/',
             session: true,
             successRedirect: '/',
-            failureRedirect: '/'
         }), (req: express.Request, res: express.Response) => {
             res.redirect('/');
         });
 
         app.get('/auth/google', passport.authenticate('google', {
+            failureRedirect: '/',
+            scope: ['profile'],
             session: true,
             successRedirect: '/',
-            failureRedirect: '/',
-            scope: ['profile']
         }));
 
         app.get('/auth/google/callback', passport.authenticate('google', {
+            failureRedirect: '/',
             session: true,
             successRedirect: '/',
-            failureRedirect: '/'
         }), (req: express.Request, res: express.Response) => {
             res.redirect('/');
         });
 
         app.get('/auth/github', passport.authenticate('github', {
+            failureRedirect: '/',
             session: true,
             successRedirect: '/',
-            failureRedirect: '/'
         }));
 
         app.get('/auth/github/callback', passport.authenticate('github', {
+            failureRedirect: '/',
             session: true,
             successRedirect: '/',
-            failureRedirect: '/'
         }), (req: express.Request, res: express.Response) => {
             res.redirect('/');
         });
@@ -208,13 +206,11 @@ export class WebApi {
     }
 }
 
-const port = argv.port || 3000;
-const api = new WebApi(express(), port);
+const api = new WebApi(express(), argv.port || 3000);
 api.run();
-logger.info(`listening on ${port}`);
+logger.info(`listening on ${argv.port || 3000}`);
 
-
-const job = new cron.CronJob('0 */5 * * * *', () => {
+const job = new cron.CronJob('0 0 * * * *', () => {
     const host = 'developersworkspace.co.za';
     const username = 'github-blog';
     const password = 'u?a@682P6b#F@Jj8';
@@ -222,9 +218,8 @@ const job = new cron.CronJob('0 */5 * * * *', () => {
     const postService = new PostService(postRepository);
 
     postService.scrapeGithub().then(() => {
-
+        logger.info('PostService.scrapGithub - Done');
     });
 }, null, true);
 
 job.start();
-

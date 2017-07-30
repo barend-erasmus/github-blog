@@ -13,15 +13,15 @@ export class VisitorRepository extends BaseRepository {
 
     public insert(visitor: Visitor): Promise<boolean> {
         const self = this;
-        return co(function*() {
+        return co(function* () {
             yield BaseRepository.sequelize.authenticate();
 
             yield BaseRepository.models.Visitor.create({
                 key: visitor.key,
+                lastLoginTimestamp: visitor.lastLoginTimestamp,
+                lastVisitTimestamp: visitor.lastVisitTimestamp,
                 type: visitor.type,
                 username: visitor.username,
-                lastLoginTimestamp: visitor.lastLoginTimestamp,
-                lastVisitTimestamp: visitor.lastVisitTimestamp
             });
 
             return true;
@@ -30,7 +30,7 @@ export class VisitorRepository extends BaseRepository {
 
     public find(key: string, type: string): Promise<Visitor> {
         const self = this;
-        return co(function*() {
+        return co(function* () {
 
             const visitor = yield BaseRepository.models.Visitor.find({
                 where: {
@@ -49,11 +49,11 @@ export class VisitorRepository extends BaseRepository {
 
     public update(visitor: Visitor): Promise<boolean> {
         const self = this;
-        return co(function*() {
+        return co(function* () {
 
             const existingVisitor = yield BaseRepository.models.Visitor.find({
                 where: {
-                    key: visitor.key
+                    key: visitor.key,
                 },
             });
 

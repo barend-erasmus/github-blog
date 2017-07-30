@@ -24,7 +24,7 @@ export class PostService {
     public list(): Promise<Post[]> {
         const self = this;
         return co(function* () {
-            let result =  yield self.postRepository.list();
+            let result = yield self.postRepository.list();
             if (result.length === 0) {
                 yield self.scrapeGithub();
                 result = yield self.postRepository.list();
@@ -57,12 +57,12 @@ export class PostService {
 
                 while (page < 10) {
                     const repositories: any[] = yield rp({
-                        uri: `https://api.github.com/users/${username}/repos?page=${page}`,
                         headers: {
+                            'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng==',
                             'User-Agent': 'Request-Promise',
-                            'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng=='
                         },
-                        json: true
+                        json: true,
+                        uri: `https://api.github.com/users/${username}/repos?page=${page}`,
                     });
 
                     if (repositories.length === 0) {
@@ -72,12 +72,12 @@ export class PostService {
                     for (const repository of repositories) {
 
                         const repositoryContents: any[] = yield rp({
-                            uri: `${repository.url}/contents`,
                             headers: {
+                                'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng==',
                                 'User-Agent': 'Request-Promise',
-                                'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng=='
                             },
-                            json: true
+                            json: true,
+                            uri: `${repository.url}/contents`,
                         });
 
                         const readmeFile = repositoryContents.find((x) => x.path === 'README.md');
@@ -87,20 +87,19 @@ export class PostService {
                         if (blogDataFile) {
 
                             const htmlForBody: string = yield rp({
-                                uri: `${readmeFile.download_url}`,
                                 headers: {
+                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng==',
                                     'User-Agent': 'Request-Promise',
-                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng=='
-                                }
+                                },
+                                uri: `${readmeFile.download_url}`,
                             });
 
-
                             const htmlForBlogData: string = yield rp({
-                                uri: `${blogDataFile.download_url}`,
                                 headers: {
+                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng==',
                                     'User-Agent': 'Request-Promise',
-                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng=='
-                                }
+                                },
+                                uri: `${blogDataFile.download_url}`,
                             });
 
                             const blogData = JSON.parse(htmlForBlogData);
@@ -111,7 +110,7 @@ export class PostService {
                             const existingPost = yield self.postRepository.find(post.key);
                             if (existingPost) {
                                 yield self.postRepository.update(post);
-                            }else {
+                            } else {
                                 yield self.postRepository.insert(post);
                             }
                         }
@@ -121,7 +120,6 @@ export class PostService {
                 }
 
             }
-
             return;
         });
     }

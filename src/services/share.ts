@@ -8,9 +8,9 @@ export class ShareService {
         return co(function* () {
 
             const result = yield rp({
+                json: true,
                 method: 'GET',
                 uri: `https://www.linkedin.com/countserv/count/share?format=json&url=${url}`,
-                json: true
             });
 
             return result.count;

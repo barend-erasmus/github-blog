@@ -16,7 +16,6 @@ export class VisitorService {
 
     }
 
-
     public login(key: string, username: string, type: string): Promise<boolean> {
         const self = this;
         return co(function* () {
@@ -24,9 +23,9 @@ export class VisitorService {
             const visitor: Visitor = yield self.visitorRepository.find(key, type);
 
             if (visitor) {
-                yield self.visitorRepository.update(new Visitor(key, username, type, new Date(), new Date()))
+                yield self.visitorRepository.update(new Visitor(key, username, type, new Date(), new Date()));
             } else {
-                yield self.visitorRepository.insert(new Visitor(key, username, type, new Date(), new Date()))
+                yield self.visitorRepository.insert(new Visitor(key, username, type, new Date(), new Date()));
             }
 
             return true;
@@ -42,12 +41,11 @@ export class VisitorService {
             if (visitor) {
                 yield self.visitorRepository.update(new Visitor(key, username, type, new Date(), visitor.lastLoginTimestamp));
             } else {
-                yield self.visitorRepository.insert(new Visitor(key, username, type, new Date(), new Date()))
+                yield self.visitorRepository.insert(new Visitor(key, username, type, new Date(), new Date()));
             }
 
             return true;
         });
     }
 
-   
 }

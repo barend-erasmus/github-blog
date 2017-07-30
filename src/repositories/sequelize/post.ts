@@ -17,14 +17,14 @@ export class PostRepository extends BaseRepository {
             yield BaseRepository.sequelize.authenticate();
 
             yield BaseRepository.models.Post.create({
-                key: post.key,
-                description: post.description,
                 author: post.author,
                 authorImage: post.authorImage,
                 body: post.body,
+                description: post.description,
+                key: post.key,
                 linkedInShareCount: post.linkedInShareCount,
                 publishedTimestamp: post.publishedTimestamp,
-                title: post.title
+                title: post.title,
             });
 
             return true;
@@ -55,7 +55,7 @@ export class PostRepository extends BaseRepository {
 
             const existingPost = yield BaseRepository.models.Post.find({
                 where: {
-                    key: post.key
+                    key: post.key,
                 },
             });
 
@@ -87,7 +87,7 @@ export class PostRepository extends BaseRepository {
                 ],
             });
 
-            return posts.map((x) => new Post(x.key, x.title, x.description, x.body, x.author, x.authorImage, x.publishedTimestamp, x.linkedInShareCount))
+            return posts.map((x) => new Post(x.key, x.title, x.description, x.body, x.author, x.authorImage, x.publishedTimestamp, x.linkedInShareCount));
         });
     }
 }
