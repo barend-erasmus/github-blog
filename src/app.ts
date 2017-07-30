@@ -78,7 +78,7 @@ export class WebApi {
         // Configures session
         app.use(cookieSession({
             keys: ['J#Z!AL6ZbZ3kzPCJ'],
-            maxAge: 24 * 60 * 60 * 1000,
+            maxAge: 604800000, // 7 Days
             name: 'session',
         }));
 
