@@ -45,13 +45,6 @@ router.get('/about', (req: Request, res: Response, next: () => void) => {
     });
 });
 
-router.get('/projects', (req: Request, res: Response, next: () => void) => {
-    res.render('projects', {
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
-        title: 'Projects',
-    });
-});
-
 router.get('/contact', (req: Request, res: Response, next: () => void) => {
     res.render('contact', {
         description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
@@ -72,20 +65,6 @@ router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
             post,
             title: post.title,
         });
-    });
-});
-
-router.get('/projects/url-shortener', (req: Request, res: Response, next: () => void) => {
-    res.render('./projects/url-shortener', {
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
-        title: 'URL Shortener',
-    });
-});
-
-router.get('/projects/html-converter', (req: Request, res: Response, next: () => void) => {
-    res.render('./projects/html-converter', {
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
-        title: 'HTML Converter',
     });
 });
 
