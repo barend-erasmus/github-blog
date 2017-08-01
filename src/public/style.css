@@ -508,7 +508,7 @@ about me
 }
 
 .about-me-widget {
-    background: url(assets/images/me-cover.jpg) no-repeat;
+    background: url(/static/images/me-cover.jpg) no-repeat;
     background-size: 100%;
     background-color: #fff;
 }
