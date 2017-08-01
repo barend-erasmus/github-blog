@@ -36,7 +36,7 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-src/temp/*.json
-
 *.js
 *.js.map
+
+!src/public/**
