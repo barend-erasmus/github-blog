@@ -1,72 +1,297 @@
-<main class="container left-container">
-    <div class="row">
-        <div id="menu-target">
-            <ul>
-                <li><i class="fa fa-home"></i><a href="/">Home</a></li>
-                <li><i class="fa fa-building"></i><a href="/about">Developer's Workspace</a></li>
-                <li><i class="fa fa-cube"></i><a href="/projects">Projects</a></li>
-                <li><i class="fa fa-paper-plane"></i><a href="/contact">Contact</a></li>
-            </ul>
-            <hr>
-            <ul>
-                <li><i class="fa fa-globe"></i><a href="/projects/url-shortener">URL Shortener</a></li>
-                <li><i class="fa fa-file"></i><a href="/projects/html-converter">HTML Converter</a></li>
-            </ul>
-            <hr>
-            <ul>
-                <li><i class="fa fa-github"></i><a href="https://github.com/developersworkspace">Github (developersworkspace)</a></li>
-                <li><i class="fa fa-github"></i><a href="https://github.com/barend-erasmus">Github (barend-erasmus)</a></li>
-            </ul>
-        </div>
-        <section class="sidebar col-md-5 col-sm-12" style="background-image: url(/static/img/default-contact.jpg)">
-            <span class="menu-trigger animated fadeInDown">
-                        <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-            </span>
-            <div class="site-info">
-                <div class="primary-info">
-                    <h1>Contact</h1>
-                    <p>Questions, Suggestions, Compliments or Complaints</p>
+<div class="main-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
 
+                <div class="leave-comment mr0"><!--leave comment-->
+                    <div id="googleMap" style="width:100%; height:380px; margin-bottom: 40px"></div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusamus aliquam deserunt esse
+                        fugit iste magnam, neque nesciunt nihil possimus ratione repellendus veniam vero. Accusamus
+                        deleniti deserunt esse illo recusandae.</p>
+
+                    <h3 class="text-uppercase">Send massage</h3>
+                    <br>
+
+                    <form class="form-horizontal contact-form" role="form" method="post" action="http://demo.shapedtheme.com/kotha-pro-html/sendemail.php">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" id="name" name="name"
+                                       placeholder="Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="email" class="form-control" id="email" name="email"
+                                       placeholder="Email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" id="subject" name="subject"
+                                       placeholder="Subject">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+										<textarea class="form-control" rows="6" name="message"
+                                                  placeholder="Write Massage" required></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" name="submit" class="btn send-btn">send massage</button>
+
+                    </form>
+                </div><!--end leave comment-->
+            </div>
+            <div class="col-md-4" data-sticky_column>
+                <div class="primary-sidebar">
+                    <aside class="widget about-me-widget">
+                        <div class="about-me-img">
+
+                            <div class="about-me-content text-center">
+                                <img src="static/images/me.png" alt="" class="img-me">
+
+                                <h3 class="text-uppercase">Rubel Miah</h3>
+
+                                <p>Rubel is enthusiastic and passionate WP Theme Cooker. He is Currently working as a
+                                    Lead WordPress Developer.</p>
+                            </div>
+                        </div>
+                        <div class="social-share">
+                            <ul class="text-center text-center">
+                                <li><a class="s-facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a class="s-twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a class="s-google-plus" href="#"><i class="fa fa-google-plus"></i></a></li>
+                                <li><a class="s-linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+                                <li><a class="s-instagram" href="#"><i class="fa fa-instagram"></i></a></li>
+                            </ul>
+                        </div>
+                    </aside>
+                    <aside class="widget news-letter">
+                        <h3 class="widget-title text-uppercase text-center">Get Newsletter</h3>
+
+                        <form action="#">
+                            <input type="email" placeholder="Your email address">
+                            <input type="submit" value="Subscribe Now"
+                                   class="text-uppercase text-center btn btn-subscribe">
+                        </form>
+
+                    </aside>
+                    <aside class="widget">
+                        <h3 class="widget-title text-uppercase text-center">Popular Posts</h3>
+
+                        <div class="popular-post">
+
+
+                            <a href="#" class="popular-img"><img src="static/images/p1.jpg" alt="">
+
+                                <div class="p-overlay"></div>
+                            </a>
+
+                            <div class="p-content">
+                                <a href="#" class="text-uppercase">Home is peaceful Place</a>
+                                <span class="p-date">February 15, 2016</span>
+
+                            </div>
+                        </div>
+                        <div class="popular-post">
+
+                            <a href="#" class="popular-img"><img src="static/images/p1.jpg" alt="">
+
+                                <div class="p-overlay"></div>
+                            </a>
+
+                            <div class="p-content">
+                                <a href="#" class="text-uppercase">Home is peaceful Place</a>
+                                <span class="p-date">February 15, 2016</span>
+                            </div>
+                        </div>
+                        <div class="popular-post">
+
+
+                            <a href="#" class="popular-img"><img src="static/images/p1.jpg" alt="">
+
+                                <div class="p-overlay"></div>
+                            </a>
+
+                            <div class="p-content">
+                                <a href="#" class="text-uppercase">Home is peaceful Place</a>
+                                <span class="p-date">February 15, 2016</span>
+                            </div>
+                        </div>
+                    </aside>
+                    <aside class="widget">
+                        <h3 class="widget-title text-uppercase text-center">Featured Posts</h3>
+
+                        <div id="widget-feature" class="owl-carousel">
+                            <div class="item">
+                                <div class="feature-content">
+                                    <img src="static/images/p1.jpg" alt="">
+
+                                    <a href="#" class="overlay-text text-center">
+                                        <h5 class="text-uppercase">Home is peaceful</h5>
+
+                                        <p>Lorem ipsum dolor sit ametsetetur sadipscing elitr, sed </p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="feature-content">
+                                    <img src="static/images/p2.jpg" alt="">
+
+                                    <a href="#" class="overlay-text text-center">
+                                        <h5 class="text-uppercase">Home is peaceful</h5>
+
+                                        <p>Lorem ipsum dolor sit ametsetetur sadipscing elitr, sed </p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="feature-content">
+                                    <img src="static/images/p3.jpg" alt="">
+
+                                    <a href="#" class="overlay-text text-center">
+                                        <h5 class="text-uppercase">Home is peaceful</h5>
+
+                                        <p>Lorem ipsum dolor sit ametsetetur sadipscing elitr, sed </p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                    <aside class="widget pos-padding">
+                        <h3 class="widget-title text-uppercase text-center">Recent Posts</h3>
+
+                        <div class="thumb-latest-posts">
+
+
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#" class="popular-img"><img src="static/images/r-p.jpg" alt="">
+
+                                        <div class="p-overlay"></div>
+                                    </a>
+                                </div>
+                                <div class="p-content">
+                                    <a href="#" class="text-uppercase">Home is peaceful Place</a>
+                                    <span class="p-date">February 15, 2016</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="thumb-latest-posts">
+
+
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#" class="popular-img"><img src="static/images/r-p.jpg" alt="">
+
+                                        <div class="p-overlay"></div>
+                                    </a>
+                                </div>
+                                <div class="p-content">
+                                    <a href="#" class="text-uppercase">Home is peaceful Place</a>
+                                    <span class="p-date">February 15, 2016</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="thumb-latest-posts">
+
+
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#" class="popular-img"><img src="static/images/r-p.jpg" alt="">
+
+                                        <div class="p-overlay"></div>
+                                    </a>
+                                </div>
+                                <div class="p-content">
+                                    <a href="#" class="text-uppercase">Home is peaceful Place</a>
+                                    <span class="p-date">February 15, 2016</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="thumb-latest-posts">
+
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#" class="popular-img"><img src="static/images/r-p.jpg" alt="">
+
+                                        <div class="p-overlay"></div>
+                                    </a>
+                                </div>
+                                <div class="p-content">
+                                    <a href="#" class="text-uppercase">Home is peaceful Place</a>
+                                    <span class="p-date">February 15, 2016</span>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                    <aside class="widget border pos-padding">
+                        <h3 class="widget-title text-uppercase text-center">Categories</h3>
+                        <ul>
+                            <li>
+                                <a href="#">Food & Drinks</a>
+                                <span class="post-count pull-right"> (2)</span>
+                            </li>
+                            <li>
+                                <a href="#">Travel</a>
+                                <span class="post-count pull-right"> (2)</span>
+                            </li>
+                            <li>
+                                <a href="#">Business</a>
+                                <span class="post-count pull-right"> (2)</span>
+                            </li>
+                            <li>
+                                <a href="#">Story</a>
+                                <span class="post-count pull-right"> (2)</span>
+                            </li>
+                            <li>
+                                <a href="#">DIY & Tips</a>
+                                <span class="post-count pull-right"> (2)</span>
+                            </li>
+                            <li>
+                                <a href="#">Lifestyle</a>
+                                <span class="post-count pull-right"> (2)</span>
+                            </li>
+                        </ul>
+                    </aside>
+                    <aside class="widget pos-padding">
+                        <h3 class="widget-title text-uppercase text-center">Follow@Instagram</h3>
+
+                        <div class="instragram-follow">
+                            <a href="#">
+                                <img src="static/images/ins-flow.jpg" alt="">
+                            </a>
+                            <a href="#">
+                                <img src="static/images/ins-flow.jpg" alt="">
+                            </a>
+                            <a href="#">
+                                <img src="static/images/ins-flow.jpg" alt="">
+                            </a>
+                            <a href="#">
+                                <img src="static/images/ins-flow.jpg" alt="">
+                            </a>
+                            <a href="#">
+                                <img src="static/images/ins-flow.jpg" alt="">
+                            </a>
+                            <a href="#">
+                                <img src="static/images/ins-flow.jpg" alt="">
+                            </a>
+                            <a href="#">
+                                <img src="static/images/ins-flow.jpg" alt="">
+                            </a>
+                            <a href="#">
+                                <img src="static/images/ins-flow.jpg" alt="">
+                            </a>
+                            <a href="#">
+                                <img src="static/images/ins-flow.jpg" alt="">
+                            </a>
+
+                        </div>
+
+                    </aside>
                 </div>
             </div>
-        </section>
-        <div class="col-md-7 col-sm-12 col-md-offset-5 main-content">
-            <h3>Contact</h3>
-            <form>
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" placeholder="Jane Doe" class="form-control" name="name">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="text" placeholder="example@email.com" class="form-control" name="email">
-                </div>
-                <div class="form-group">
-                    <label for="company">Company</label>
-                    <input type="text" placeholder="Example Ltd" class="form-control" name="company">
-                </div>
-
-                <div class="form-group">
-                    <label for="number">Phone Number</label>
-                    <input type="tel" placeholder="+44778217779" class="form-control" name="number">
-                </div>
-
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea class="form-control" name="message" placeholder="Hello, lets chat"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <input class="btn btn-default" type="submit" value="Send">
-                </div>
-            </form>
-            <footer class="split-footer">
-                <a href="/about">About</a>
-                <i class="link-spacer"></i>
-                <a href="/">Developer's Workspace Pty Ltd 2017</a>
-            </footer>
         </div>
     </div>
-</main>
+</div>
