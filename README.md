@@ -41,4 +41,4 @@ Now that you are logged in and made sure that your username is added to the conf
 
 Each Blog Post is based off a Github repository. Let's go and make a [new repository](https://github.com/new).
 
-![](https://github.com/barend-erasmus/github-blog/raw/master/images/screenshot-new-repository.png)
+![](https://github.com/barend-erasmus/github-blog/raw/master/images/screenshot-new-repository.PNG)
