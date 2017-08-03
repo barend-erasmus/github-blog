@@ -45,7 +45,7 @@ export class PostRepository extends BaseRepository {
                 return null;
             }
 
-            return new Post(post.key, post.title, post.description, post.body, post.author, post.authorImage, post.publishedTimestamp, post.linkedInShareCount);
+            return new Post(post.key, post.title, post.description, post.body, post.image, post.category, post.author, post.authorImage, post.publishedTimestamp, post.linkedInShareCount);
         });
     }
 
@@ -66,6 +66,7 @@ export class PostRepository extends BaseRepository {
             existingPost.author = post.author;
             existingPost.authorImage = post.authorImage;
             existingPost.body = post.body;
+            existingPost.image = post.image;
             existingPost.description = post.description;
             existingPost.linkedInShareCount = post.linkedInShareCount;
             existingPost.publishedTimestamp = post.publishedTimestamp;
@@ -87,7 +88,7 @@ export class PostRepository extends BaseRepository {
                 ],
             });
 
-            return posts.map((x) => new Post(x.key, x.title, x.description, x.body, x.author, x.authorImage, x.publishedTimestamp, x.linkedInShareCount));
+            return posts.map((x) => new Post(x.key, x.title, x.description, x.body, x.image, x.category, x.author, x.authorImage, x.publishedTimestamp, x.linkedInShareCount));
         });
     }
 }

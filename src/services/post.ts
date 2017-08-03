@@ -106,7 +106,7 @@ export class PostService {
 
                             const linkedInShareCount = yield self.shareService.linkedIn(`https://developersworkspace.co.za/post/${repository.full_name.replace('/', '-at-')}`);
 
-                            const post = new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlForBody, repository.owner.login, repository.owner.avatar_url, repository.pushed_at, linkedInShareCount);
+                            const post = new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlForBody, blogData.image, blogData.category, repository.owner.login, repository.owner.avatar_url, repository.pushed_at, linkedInShareCount);
                             const existingPost = yield self.postRepository.find(post.key);
                             if (existingPost) {
                                 yield self.postRepository.update(post);

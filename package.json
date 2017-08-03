@@ -7,7 +7,8 @@
     "test": "tsc & mocha ./src/**/*.test.js",
     "coverage": "tsc & istanbul cover node_modules/mocha/bin/_mocha --root ./src ./src/**/*.test.js",
     "start": "tsc & node ./src/app.js",
-    "deploy": "tsc & ssh-deployer -f deploy.json --host developersworkspace.co.za --username username --password password --workspace ./"
+    "deploy": "tsc & ssh-deployer -f deploy.json --host developersworkspace.co.za --username username --password password --workspace ./",
+    "job": "tsc & node ./src/job.js"
   },
   "author": "Barend Erasmus",
   "license": "MIT",

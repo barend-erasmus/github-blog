@@ -19,9 +19,17 @@ export class BaseRepository {
                 allowNull: false,
                 type: Sequelize.TEXT,
             },
+            category: {
+                allowNull: true,
+                type: Sequelize.STRING,
+            },
             description: {
                 allowNull: true,
                 type: Sequelize.TEXT,
+            },
+            image: {
+                allowNull: true,
+                type: Sequelize.STRING,
             },
             key: {
                 allowNull: false,
@@ -36,7 +44,7 @@ export class BaseRepository {
                 type: Sequelize.DATEONLY,
             },
             title: {
-                allowNull: true,
+                allowNull: false,
                 type: Sequelize.STRING,
             },
         });

@@ -9,10 +9,12 @@ export class Post {
                 public title: string,
                 public description: string,
                 public body: string,
+                public image: string,
+                public category: string,
                 public author: string,
                 public authorImage: string,
                 public publishedTimestamp: string,
                 public linkedInShareCount: number) {
-        this.displayTimestamp = moment(this.publishedTimestamp).format('DD MMMM YYYY HH:mm');
+        this.displayTimestamp = moment(this.publishedTimestamp).format('DD MMMM YYYY');
     }
 }
