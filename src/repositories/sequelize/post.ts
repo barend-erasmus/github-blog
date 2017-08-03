@@ -20,7 +20,9 @@ export class PostRepository extends BaseRepository {
                 author: post.author,
                 authorImage: post.authorImage,
                 body: post.body,
+                category: post.category,
                 description: post.description,
+                image: post.image,
                 key: post.key,
                 linkedInShareCount: post.linkedInShareCount,
                 publishedTimestamp: post.publishedTimestamp,
@@ -66,6 +68,7 @@ export class PostRepository extends BaseRepository {
             existingPost.author = post.author;
             existingPost.authorImage = post.authorImage;
             existingPost.body = post.body;
+            existingPost.category = post.category;
             existingPost.image = post.image;
             existingPost.description = post.description;
             existingPost.linkedInShareCount = post.linkedInShareCount;
