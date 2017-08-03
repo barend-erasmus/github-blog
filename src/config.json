@@ -1,0 +1,80 @@
+{
+    "development": {
+        "database": {
+            "host": "developersworkspace.co.za",
+            "password": "u?a@682P6b#F@Jj8",
+            "type": "postgresql",
+            "username": "github-blog"
+        },
+        "domain": "https://developersworkspace.co.za",
+        "github": {
+            "password": "password",
+            "username": "barend-erasmus"
+        },
+        "oauth2": {
+            "github": {
+                "callback": "http://localhost:3000/auth/github/callback",
+                "clientId": "1ce4c2e208e9ed338ec6",
+                "clientSecret": "187d1ce0e58a3708e7a9efb4c644dd14dd17d876"
+            },
+            "google": {
+                "callback": "http://localhost:3000/auth/google/callback",
+                "clientId": "747263281118-2gquah79jdtp5l6k7flonm694msp7254.apps.googleusercontent.com",
+                "clientSecret": "2fcRUL7yghAtGE5mU9_1WUqA"
+            },
+            "linkedIn": {
+                "callback": "http://localhost:3000/auth/linkedin/callback",
+                "clientId": "861jdkiau0rqs5",
+                "clientSecret": "x7x0u5FK5Pz9V5nB"
+            }
+        },
+        "scheduledTask": {
+            "cron": {
+                "pattern": "0 0 * * * *"
+            }
+        },
+        "users": [
+            "barend-erasmus",
+            "developersworkspace"
+        ]
+    },
+    "production": {
+        "database": {
+            "host": "developersworkspace.co.za",
+            "password": "u?a@682P6b#F@Jj8",
+            "type": "postgresql",
+            "username": "github-blog"
+        },
+        "domain": "https://developersworkspace.co.za",
+        "github": {
+            "password": "password",
+            "username": "barend-erasmus"
+        },
+        "oauth2": {
+            "github": {
+                "callback": "https://developersworkspace.co.za/auth/github/callback",
+                "clientId": "2e5099132d37735f7e1e",
+                "clientSecret": "29d9ab22b8445f04808bd142dc1550adc0e0082a"
+            },
+            "google": {
+                "callback": "https://developersworkspace.co.za/auth/google/callback",
+                "clientId": "747263281118-2gquah79jdtp5l6k7flonm694msp7254.apps.googleusercontent.com",
+                "clientSecret": "2fcRUL7yghAtGE5mU9_1WUqA"
+            },
+            "linkedIn": {
+                "callback": "https://developersworkspace.co.za/auth/linkedin/callback",
+                "clientId": "861jdkiau0rqs5",
+                "clientSecret": "x7x0u5FK5Pz9V5nB"
+            }
+        },
+        "scheduledTask": {
+            "cron": {
+                "pattern": "0 0 * * * *"
+            }
+        },
+        "users": [
+            "barend-erasmus",
+            "developersworkspace"
+        ]
+    }
+}

@@ -14,10 +14,9 @@ import { ShareService } from './share';
 
 export class PostService {
 
-    private users: string[] = ['developersworkspace', 'barend-erasmus'];
     private shareService = new ShareService();
 
-    constructor(private postRepository: IPostRepository) {
+    constructor(private postRepository: IPostRepository, private users: string[], private username: string, private password: string, private domain: string) {
 
     }
 
@@ -58,7 +57,7 @@ export class PostService {
                 while (page < 10) {
                     const repositories: any[] = yield rp({
                         headers: {
-                            'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng==',
+                            'Authorization': `Basic ${self.getAuthorizationHeader()}`,
                             'User-Agent': 'Request-Promise',
                         },
                         json: true,
@@ -73,7 +72,7 @@ export class PostService {
 
                         const repositoryContents: any[] = yield rp({
                             headers: {
-                                'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng==',
+                                'Authorization': `Basic ${self.getAuthorizationHeader()}`,
                                 'User-Agent': 'Request-Promise',
                             },
                             json: true,
@@ -88,7 +87,7 @@ export class PostService {
 
                             const htmlForBody: string = yield rp({
                                 headers: {
-                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng==',
+                                    'Authorization': `Basic ${self.getAuthorizationHeader()}`,
                                     'User-Agent': 'Request-Promise',
                                 },
                                 uri: `${readmeFile.download_url}`,
@@ -96,7 +95,7 @@ export class PostService {
 
                             const htmlForBlogData: string = yield rp({
                                 headers: {
-                                    'Authorization': 'Basic YmFyZW5kLWVyYXNtdXM6R2l0aHViTWlkZXJpY0s5Ng==',
+                                    'Authorization': `Basic ${self.getAuthorizationHeader()}`,
                                     'User-Agent': 'Request-Promise',
                                 },
                                 uri: `${blogDataFile.download_url}`,
@@ -104,7 +103,7 @@ export class PostService {
 
                             const blogData = JSON.parse(htmlForBlogData);
 
-                            const linkedInShareCount = yield self.shareService.linkedIn(`https://developersworkspace.co.za/post/${repository.full_name.replace('/', '-at-')}`);
+                            const linkedInShareCount = yield self.shareService.linkedIn(`${self.domain}/post/${repository.full_name.replace('/', '-at-')}`);
 
                             const post = new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlForBody, blogData.image, blogData.category, repository.owner.login, repository.owner.avatar_url, repository.pushed_at, linkedInShareCount);
                             const existingPost = yield self.postRepository.find(post.key);
@@ -122,5 +121,9 @@ export class PostService {
             }
             return;
         });
+    }
+
+    private getAuthorizationHeader(): string {
+        return new Buffer(`${this.username}:${this.password}`).toString('base64');
     }
 }

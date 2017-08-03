@@ -5,10 +5,13 @@ import * as passport from 'passport';
 import * as GithubStrategy from 'passport-github';
 import * as GoogleStrategy from 'passport-google-oauth20';
 import * as LinkedInStrategy from 'passport-linkedin';
-import path = require('path');
 import * as co from 'co';
 import * as cron from 'cron';
 import * as yargs from 'yargs';
+
+import * as fs from 'fs';
+import * as path from 'path';
+const config = JSON.parse(fs.readFileSync(path.join(__dirname, './config.json'), 'utf8'));
 
 // Imports repositories
 import { PostRepository } from './repositories/sequelize/post';
@@ -96,9 +99,9 @@ export class WebApi {
         app.use(passport.session());
 
         passport.use(new LinkedInStrategy({
-            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/linkedin/callback" : "http://localhost:3000/auth/linkedin/callback",
-            consumerKey: '861jdkiau0rqs5',
-            consumerSecret: 'x7x0u5FK5Pz9V5nB',
+            callbackURL: argv.prod ? config.production.oauth2.linkedIn.callback : config.development.oauth2.linkedIn.callback,
+            consumerKey: argv.prod ? config.production.oauth2.linkedIn.clientId : config.development.oauth2.linkedIn.clientId,
+            consumerSecret: argv.prod ? config.production.oauth2.linkedIn.clientSecret : config.development.oauth2.linkedIn.clientSecret,
         }, (token: string, tokenSecret: string, profile: any, done: (err: Error, obj: any) => void) => {
 
             const self = this;
@@ -110,9 +113,9 @@ export class WebApi {
         }));
 
         passport.use(new GoogleStrategy({
-            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/google/callback" : "http://localhost:3000/auth/google/callback",
-            clientID: '747263281118-2gquah79jdtp5l6k7flonm694msp7254.apps.googleusercontent.com',
-            clientSecret: '2fcRUL7yghAtGE5mU9_1WUqA',
+            callbackURL: argv.prod ? config.production.oauth2.google.callback : config.development.oauth2.google.callback,
+            clientID: argv.prod ? config.production.oauth2.google.clientId : config.development.oauth2.google.clientId,
+            clientSecret: argv.prod ? config.production.oauth2.google.clientSecret : config.development.oauth2.google.clientSecret,
         }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
 
             const self = this;
@@ -124,9 +127,9 @@ export class WebApi {
         }));
 
         passport.use(new GithubStrategy({
-            callbackURL: argv.prod ? "https://developersworkspace.co.za/auth/github/callback" : "http://localhost:3000/auth/github/callback",
-            clientID: argv.prod ? '2e5099132d37735f7e1e' : '1ce4c2e208e9ed338ec6',
-            clientSecret: argv.prod ? '29d9ab22b8445f04808bd142dc1550adc0e0082a' : '187d1ce0e58a3708e7a9efb4c644dd14dd17d876',
+            callbackURL: argv.prod ? config.production.oauth2.github.callback : config.development.oauth2.github.callback,
+            clientID: argv.prod ? config.production.oauth2.github.clientId : config.development.oauth2.github.clientId,
+            clientSecret: argv.prod ? config.production.oauth2.github.clientSecret : config.development.oauth2.github.clientSecret,
         }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
 
             const self = this;
@@ -142,9 +145,9 @@ export class WebApi {
     }
 
     private geVistorService(): VisitorService {
-        const host = 'developersworkspace.co.za';
-        const username = 'github-blog';
-        const password = 'u?a@682P6b#F@Jj8';
+        const host = argv.prod ? config.production.database.host : config.development.database.host;
+        const username = argv.prod ? config.production.database.username : config.development.database.username;
+        const password = argv.prod ? config.production.database.password : config.development.database.password;
         const visitorRepository = new VisitorRepository(host, username, password);
         const visitorService = new VisitorService(visitorRepository);
         return visitorService;
@@ -210,12 +213,12 @@ const api = new WebApi(express(), argv.port || 3000);
 api.run();
 logger.info(`listening on ${argv.port || 3000}`);
 
-const job = new cron.CronJob('0 0 * * * *', () => {
-    const host = 'developersworkspace.co.za';
-    const username = 'github-blog';
-    const password = 'u?a@682P6b#F@Jj8';
+const job = new cron.CronJob(argv.prod ? config.production.scheduledTask.cron.pattern : config.development.scheduledTask.cron.pattern, () => {
+    const host = argv.prod ? config.production.database.host : config.development.database.host;
+    const username = argv.prod ? config.production.database.username : config.development.database.username;
+    const password = argv.prod ? config.production.database.password : config.development.database.password;
     const postRepository = new PostRepository(host, username, password);
-    const postService = new PostService(postRepository);
+    const postService = new PostService(postRepository, argv.prod ? config.production.users : config.development.users, argv.prod ? config.production.github.username : config.development.github.username, argv.prod ? config.production.github.password : config.development.github.password, argv.prod ? config.production.domain : config.development.domain);
 
     postService.scrapeGithub().then(() => {
         logger.info('PostService.scrapeGithub - Done');
