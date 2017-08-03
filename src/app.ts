@@ -210,16 +210,16 @@ const api = new WebApi(express(), argv.port || 3000);
 api.run();
 logger.info(`listening on ${argv.port || 3000}`);
 
-// const job = new cron.CronJob('0 0 * * * *', () => {
-//     const host = 'developersworkspace.co.za';
-//     const username = 'github-blog';
-//     const password = 'u?a@682P6b#F@Jj8';
-//     const postRepository = new PostRepository(host, username, password);
-//     const postService = new PostService(postRepository);
+const job = new cron.CronJob('0 0 * * * *', () => {
+    const host = 'developersworkspace.co.za';
+    const username = 'github-blog';
+    const password = 'u?a@682P6b#F@Jj8';
+    const postRepository = new PostRepository(host, username, password);
+    const postService = new PostService(postRepository);
 
-//     postService.scrapeGithub().then(() => {
-//         logger.info('PostService.scrapeGithub - Done');
-//     });
-// }, null, true);
+    postService.scrapeGithub().then(() => {
+        logger.info('PostService.scrapeGithub - Done');
+    });
+}, null, true);
 
-// job.start();
+job.start();
