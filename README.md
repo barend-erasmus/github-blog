@@ -45,3 +45,8 @@ Each Blog Post is based off a Github repository. Let's go and make a [new reposi
 
 #### **Step 2**
 
+Once you have created the new repository, you can clone it by using [Visual Studio Code](https://code.visualstudio.com/download).
+
+Open Visual Studio Code and press `ctrl + shift + p` to open the command menu.
+
+![](https://github.com/barend-erasmus/github-blog/raw/master/images/screenshot-vscode-command.png)
