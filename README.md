@@ -12,7 +12,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eu tempor pur
 
 ![](https://github.com/barend-erasmus/github-blog/raw/master/images/github-blog.png)
 
-## Creating a new Blog Post
+## Getting Started
 
 ### The Attributes of a Blog Post
 
@@ -29,9 +29,9 @@ A Blog Post has the following attributes:
 * Published Timestamp - Published or Last Updated Timestamp of the Blog Post.
 * LinkedIn Share Count - Number of times Blog Post shared on LinkedIn.
 
-### Tutorial
+### Creating a new Blog Post
 
-Github Blog use one or more Github account to as a data source for its content, thus you'll have to create a [Github account](https://github.com/join) or if you already have one, you'll need to [login](https://github.com/login).
+Github Blog use one or more Github account to as a data source for its content, thus you'll have to create a [Github Account](https://github.com/join) or if you already have one, you'll need to [Login](https://github.com/login).
 
 After you've registered or logged in, you need to make sure that your username is added to the configuration of the Github Blog.
 
@@ -39,14 +39,21 @@ After you've registered or logged in, you need to make sure that your username i
 
 Now that you are logged in and made sure that your username is added to the configuration of the Github Blog, we can start creating our first Blog Post.
 
-Each Blog Post is based off a Github repository. Let's go and make a [new repository](https://github.com/new).
+Each Blog Post is based off a Github repository. Let's go and make a [New Repository](https://github.com/new).
 
 ![](https://github.com/barend-erasmus/github-blog/raw/master/images/screenshot-new-repository.PNG)
 
 #### **Step 2**
 
-Once you have created the new repository, you can clone it by using [Visual Studio Code](https://code.visualstudio.com/download).
+Once you have created the new repository, you can clone it by using [Source Tree](https://www.sourcetreeapp.com/) which can be dowloaded [here](https://downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-2.1.2.5.exe?_ga=2.15719541.279631402.1502350707-1804559775.1502350707).
 
-Open Visual Studio Code and press `ctrl + shift + p` to open the command menu.
+#### **Step 3**
 
-![](https://github.com/barend-erasmus/github-blog/raw/master/images/screenshot-vscode-command.png)
+Open the `README.md` file using your favorite text editor such as [Visual Studio Code](https://code.visualstudio.com/), [Sublime Text](https://www.sublimetext.com/), [Notepad ++](https://notepad-plus-plus.org/download/v7.4.2.html) or [Atom](https://atom.io/).
+
+#### **Step 4**
+
+You can use this [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) as a guideline on how to edit your `README.md` file.
+
+
+### Publishing a new Blog Post
