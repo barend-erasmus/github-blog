@@ -25,6 +25,9 @@ This project will also require a database such as mysql, mssql, SQLite, postgres
 Once you've setuped the database, you'll need to change some configuration in the `config.json` file which can be found under the `src` directory.
 
 * Database
+
+    This section defines your database details such as type, username, password and host.
+
     ```
     "database": {
         "host": "127.0.0.1",
@@ -36,10 +39,14 @@ Once you've setuped the database, you'll need to change some configuration in th
 
 * Domain
 
+    This section defines your domain which will be used to generate LinkedIn and Facebook share urls.
+
     ```
     "domain": "http://yourdomain.com",
     ```
 * Github
+
+    This section defines your Github credentials which will be used to generate a authentication token.
 
     ```
     "github": {
@@ -49,6 +56,8 @@ Once you've setuped the database, you'll need to change some configuration in th
     ```
 
 * OAuth 2
+
+    This section defines your OAuth2 details for Github, Google and LinkendIn. This is the only supported OAuth2 providers.
 
     ```
     "oauth2": {
@@ -72,6 +81,8 @@ Once you've setuped the database, you'll need to change some configuration in th
 
 * Scheduled Task
 
+    This section defines the details of the scheduled task.
+
     ```
     "scheduledTask": {
         "cron": {
@@ -81,6 +92,8 @@ Once you've setuped the database, you'll need to change some configuration in th
     ```
 
 * Users
+
+    This section defines the Github profiles which will scraped for blog posts.
 
     ```
     "users": [
