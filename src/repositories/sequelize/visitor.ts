@@ -31,6 +31,7 @@ export class VisitorRepository extends BaseRepository {
     public find(key: string, type: string): Promise<Visitor> {
         const self = this;
         return co(function* () {
+            yield BaseRepository.sequelize.authenticate();
 
             const visitor = yield BaseRepository.models.Visitor.find({
                 where: {
@@ -50,6 +51,7 @@ export class VisitorRepository extends BaseRepository {
     public update(visitor: Visitor): Promise<boolean> {
         const self = this;
         return co(function* () {
+            yield BaseRepository.sequelize.authenticate();
 
             const existingVisitor = yield BaseRepository.models.Visitor.find({
                 where: {

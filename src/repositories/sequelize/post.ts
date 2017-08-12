@@ -36,6 +36,7 @@ export class PostRepository extends BaseRepository {
     public find(key: string): Promise<Post> {
         const self = this;
         return co(function*() {
+            yield BaseRepository.sequelize.authenticate();
 
             const post = yield BaseRepository.models.Post.find({
                 where: {
@@ -54,6 +55,7 @@ export class PostRepository extends BaseRepository {
     public update(post: Post): Promise<boolean> {
         const self = this;
         return co(function*() {
+            yield BaseRepository.sequelize.authenticate();
 
             const existingPost = yield BaseRepository.models.Post.find({
                 where: {
@@ -84,6 +86,7 @@ export class PostRepository extends BaseRepository {
     public list(): Promise<Post[]> {
         const self = this;
         return co(function*() {
+            yield BaseRepository.sequelize.authenticate();
 
             const posts = yield BaseRepository.models.Post.findAll({
                 order: [
