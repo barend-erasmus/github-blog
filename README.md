@@ -46,7 +46,7 @@ Once you've setuped the database, you'll need to change some configuration in th
     ```
 * Github
 
-    This section defines your Github credentials which will be used to generate a authentication token.
+    This section defines your Github credentials which will be used to generate an authentication token.
 
     ```
     "github": {
