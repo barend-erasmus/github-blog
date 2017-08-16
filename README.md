@@ -16,7 +16,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eu tempor pur
 
 ### Running locally or in production.
 
-Wheater you're running this locally or in production you'll first need to `fork` and `clone` this [Repository](https://github.com/barend-erasmus/github-blog).
+Whether you're running this locally or in production you'll first need to `fork` and `clone` this [Repository](https://github.com/barend-erasmus/github-blog).
 
 ![](https://github.com/barend-erasmus/github-blog/raw/master/images/screenshot-fork-clone.PNG)
 
