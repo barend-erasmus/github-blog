@@ -1,5 +1,4 @@
 // Imports
-import co = require('co');
 import MarkdownIt = require('markdown-it');
 import rp = require('request-promise');
 
@@ -20,107 +19,98 @@ export class PostService {
 
     }
 
-    public list(): Promise<Post[]> {
-        const self = this;
-        return co(function* () {
-            let result = yield self.postRepository.list();
-            if (result.length === 0) {
-                yield self.scrapeGithub();
-                result = yield self.postRepository.list();
-            }
-            return result;
-        });
+    public async list(): Promise<Post[]> {
+        let result = await this.postRepository.list();
+        if (result.length === 0) {
+            await this.scrapeGithub();
+            result = await this.postRepository.list();
+        }
+        return result;
     }
 
-    public find(key: string): Promise<Post> {
-        const self = this;
-        return co(function* () {
+    public async find(key: string): Promise<Post> {
 
-            const post = yield self.postRepository.find(key);
+        const post = await this.postRepository.find(key);
 
-            const md = new MarkdownIt();
+        const md = new MarkdownIt();
 
-            post.body = md.render(post.body);
+        post.body = md.render(post.body);
 
-            return post;
-        });
+        return post;
     }
 
-    public scrapeGithub(): Promise<void> {
-        const self = this;
-        return co(function* () {
+    public async scrapeGithub(): Promise<void> {
 
-            for (const username of self.users) {
+        for (const username of this.users) {
 
-                let page = 1;
+            let page = 1;
 
-                while (page < 10) {
-                    const repositories: any[] = yield rp({
+            while (page < 10) {
+                const repositories: any[] = await rp({
+                    headers: {
+                        'Authorization': `Basic ${this.getAuthorizationHeader()}`,
+                        'User-Agent': 'Request-Promise',
+                    },
+                    json: true,
+                    uri: `https://api.github.com/users/${username}/repos?page=${page}`,
+                });
+
+                if (repositories.length === 0) {
+                    break;
+                }
+
+                for (const repository of repositories) {
+
+                    const repositoryContents: any[] = await rp({
                         headers: {
-                            'Authorization': `Basic ${self.getAuthorizationHeader()}`,
+                            'Authorization': `Basic ${this.getAuthorizationHeader()}`,
                             'User-Agent': 'Request-Promise',
                         },
                         json: true,
-                        uri: `https://api.github.com/users/${username}/repos?page=${page}`,
+                        uri: `${repository.url}/contents`,
                     });
 
-                    if (repositories.length === 0) {
-                        break;
-                    }
+                    const readmeFile = repositoryContents.find((x) => x.path === 'README.md');
 
-                    for (const repository of repositories) {
+                    const blogDataFile = repositoryContents.find((x) => x.path === 'blog-data');
 
-                        const repositoryContents: any[] = yield rp({
+                    if (blogDataFile) {
+
+                        const htmlForBody: string = await rp({
                             headers: {
-                                'Authorization': `Basic ${self.getAuthorizationHeader()}`,
+                                'Authorization': `Basic ${this.getAuthorizationHeader()}`,
                                 'User-Agent': 'Request-Promise',
                             },
-                            json: true,
-                            uri: `${repository.url}/contents`,
+                            uri: `${readmeFile.download_url}`,
                         });
 
-                        const readmeFile = repositoryContents.find((x) => x.path === 'README.md');
+                        const htmlForBlogData: string = await rp({
+                            headers: {
+                                'Authorization': `Basic ${this.getAuthorizationHeader()}`,
+                                'User-Agent': 'Request-Promise',
+                            },
+                            uri: `${blogDataFile.download_url}`,
+                        });
 
-                        const blogDataFile = repositoryContents.find((x) => x.path === 'blog-data');
+                        const blogData = JSON.parse(htmlForBlogData);
 
-                        if (blogDataFile) {
+                        const linkedInShareCount = await this.shareService.linkedIn(`${this.domain}/post/${repository.full_name.replace('/', '-at-')}`);
 
-                            const htmlForBody: string = yield rp({
-                                headers: {
-                                    'Authorization': `Basic ${self.getAuthorizationHeader()}`,
-                                    'User-Agent': 'Request-Promise',
-                                },
-                                uri: `${readmeFile.download_url}`,
-                            });
-
-                            const htmlForBlogData: string = yield rp({
-                                headers: {
-                                    'Authorization': `Basic ${self.getAuthorizationHeader()}`,
-                                    'User-Agent': 'Request-Promise',
-                                },
-                                uri: `${blogDataFile.download_url}`,
-                            });
-
-                            const blogData = JSON.parse(htmlForBlogData);
-
-                            const linkedInShareCount = yield self.shareService.linkedIn(`${self.domain}/post/${repository.full_name.replace('/', '-at-')}`);
-
-                            const post = new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlForBody, blogData.image, blogData.category, repository.owner.login, repository.owner.avatar_url, repository.pushed_at, linkedInShareCount);
-                            const existingPost = yield self.postRepository.find(post.key);
-                            if (existingPost) {
-                                yield self.postRepository.update(post);
-                            } else {
-                                yield self.postRepository.insert(post);
-                            }
+                        const post = new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlForBody, blogData.image, blogData.category, repository.owner.login, repository.owner.avatar_url, repository.pushed_at, linkedInShareCount);
+                        const existingPost = await this.postRepository.find(post.key);
+                        if (existingPost) {
+                            await this.postRepository.update(post);
+                        } else {
+                            await this.postRepository.insert(post);
                         }
                     }
-
-                    page = page + 1;
                 }
 
+                page = page + 1;
             }
-            return;
-        });
+
+        }
+        return;
     }
 
     private getAuthorizationHeader(): string {

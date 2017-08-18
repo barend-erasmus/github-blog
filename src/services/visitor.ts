@@ -1,6 +1,3 @@
-// Imports
-import co = require('co');
-
 // Imports models
 import { Visitor } from './../entities/visitor';
 
@@ -16,36 +13,28 @@ export class VisitorService {
 
     }
 
-    public login(key: string, username: string, type: string): Promise<boolean> {
-        const self = this;
-        return co(function* () {
+    public async login(key: string, username: string, type: string): Promise<boolean> {
+        const visitor: Visitor = await this.visitorRepository.find(key, type);
 
-            const visitor: Visitor = yield self.visitorRepository.find(key, type);
+        if (visitor) {
+            await this.visitorRepository.update(new Visitor(key, username, type, new Date(), new Date()));
+        } else {
+            await this.visitorRepository.insert(new Visitor(key, username, type, new Date(), new Date()));
+        }
 
-            if (visitor) {
-                yield self.visitorRepository.update(new Visitor(key, username, type, new Date(), new Date()));
-            } else {
-                yield self.visitorRepository.insert(new Visitor(key, username, type, new Date(), new Date()));
-            }
-
-            return true;
-        });
+        return true;
     }
 
-    public visit(key: string, username: string, type: string): Promise<boolean> {
-        const self = this;
-        return co(function* () {
+    public async visit(key: string, username: string, type: string): Promise<boolean> {
+        const visitor: Visitor = await this.visitorRepository.find(key, type);
 
-            const visitor: Visitor = yield self.visitorRepository.find(key, type);
+        if (visitor) {
+            await this.visitorRepository.update(new Visitor(key, username, type, new Date(), visitor.lastLoginTimestamp));
+        } else {
+            await this.visitorRepository.insert(new Visitor(key, username, type, new Date(), new Date()));
+        }
 
-            if (visitor) {
-                yield self.visitorRepository.update(new Visitor(key, username, type, new Date(), visitor.lastLoginTimestamp));
-            } else {
-                yield self.visitorRepository.insert(new Visitor(key, username, type, new Date(), new Date()));
-            }
-
-            return true;
-        });
+        return true;
     }
 
 }

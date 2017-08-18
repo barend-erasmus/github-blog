@@ -5,7 +5,6 @@ import * as passport from 'passport';
 import * as GithubStrategy from 'passport-github';
 import * as GoogleStrategy from 'passport-google-oauth20';
 import * as LinkedInStrategy from 'passport-linkedin';
-import * as co from 'co';
 import * as cron from 'cron';
 import * as yargs from 'yargs';
 
@@ -102,13 +101,8 @@ export class WebApi {
             callbackURL: argv.prod ? config.production.oauth2.linkedIn.callback : config.development.oauth2.linkedIn.callback,
             consumerKey: argv.prod ? config.production.oauth2.linkedIn.clientId : config.development.oauth2.linkedIn.clientId,
             consumerSecret: argv.prod ? config.production.oauth2.linkedIn.clientSecret : config.development.oauth2.linkedIn.clientSecret,
-        }, (token: string, tokenSecret: string, profile: any, done: (err: Error, obj: any) => void) => {
-
-            const self = this;
-            co(function* () {
-                yield self.geVistorService().login(profile.id, profile.displayName, 'LinkedIn');
-            });
-
+        }, async (token: string, tokenSecret: string, profile: any, done: (err: Error, obj: any) => void) => {
+            await this.geVistorService().login(profile.id, profile.displayName, 'LinkedIn');
             return done(null, profile);
         }));
 
@@ -116,13 +110,8 @@ export class WebApi {
             callbackURL: argv.prod ? config.production.oauth2.google.callback : config.development.oauth2.google.callback,
             clientID: argv.prod ? config.production.oauth2.google.clientId : config.development.oauth2.google.clientId,
             clientSecret: argv.prod ? config.production.oauth2.google.clientSecret : config.development.oauth2.google.clientSecret,
-        }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
-
-            const self = this;
-            co(function* () {
-                yield self.geVistorService().login(profile.id, profile.displayName, 'Google');
-            });
-
+        }, async (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
+            await this.geVistorService().login(profile.id, profile.displayName, 'Google');
             return done(null, profile);
         }));
 
@@ -130,13 +119,8 @@ export class WebApi {
             callbackURL: argv.prod ? config.production.oauth2.github.callback : config.development.oauth2.github.callback,
             clientID: argv.prod ? config.production.oauth2.github.clientId : config.development.oauth2.github.clientId,
             clientSecret: argv.prod ? config.production.oauth2.github.clientSecret : config.development.oauth2.github.clientSecret,
-        }, (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
-
-            const self = this;
-            co(function* () {
-                yield self.geVistorService().login(profile.id, profile.displayName, 'Github');
-            });
-
+        }, async (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
+            await this.geVistorService().login(profile.id, profile.displayName, 'Github');
             return done(null, profile);
         }));
 

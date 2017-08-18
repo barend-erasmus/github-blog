@@ -1,5 +1,4 @@
 // Imports
-import * as co from 'co';
 import { BaseRepository } from './base';
 
 // Imports models
@@ -11,64 +10,55 @@ export class VisitorRepository extends BaseRepository {
         super(host, username, password);
     }
 
-    public insert(visitor: Visitor): Promise<boolean> {
-        const self = this;
-        return co(function* () {
-            yield BaseRepository.sequelize.authenticate();
+    public async insert(visitor: Visitor): Promise<boolean> {
+        await BaseRepository.sequelize.authenticate();
 
-            yield BaseRepository.models.Visitor.create({
+        await BaseRepository.models.Visitor.create({
+            key: visitor.key,
+            lastLoginTimestamp: visitor.lastLoginTimestamp,
+            lastVisitTimestamp: visitor.lastVisitTimestamp,
+            type: visitor.type,
+            username: visitor.username,
+        });
+
+        return true;
+    }
+
+    public async find(key: string, type: string): Promise<Visitor> {
+        await BaseRepository.sequelize.authenticate();
+
+        const visitor: any = await BaseRepository.models.Visitor.find({
+            where: {
+                key,
+                type,
+            },
+        });
+
+        if (!visitor) {
+            return null;
+        }
+
+        return new Visitor(visitor.key, visitor.username, visitor.type, visitor.lastVisitTimestamp, visitor.lastLoginTimestamp);
+    }
+
+    public async update(visitor: Visitor): Promise<boolean> {
+        await BaseRepository.sequelize.authenticate();
+
+        const existingVisitor: any = await BaseRepository.models.Visitor.find({
+            where: {
                 key: visitor.key,
-                lastLoginTimestamp: visitor.lastLoginTimestamp,
-                lastVisitTimestamp: visitor.lastVisitTimestamp,
-                type: visitor.type,
-                username: visitor.username,
-            });
-
-            return true;
+            },
         });
-    }
 
-    public find(key: string, type: string): Promise<Visitor> {
-        const self = this;
-        return co(function* () {
-            yield BaseRepository.sequelize.authenticate();
+        if (!existingVisitor) {
+            return false;
+        }
 
-            const visitor = yield BaseRepository.models.Visitor.find({
-                where: {
-                    key,
-                    type,
-                },
-            });
+        existingVisitor.lastLoginTimestamp = visitor.lastLoginTimestamp;
+        existingVisitor.lastVisitTimestamp = visitor.lastVisitTimestamp;
 
-            if (!visitor) {
-                return null;
-            }
+        await existingVisitor.save();
 
-            return new Visitor(visitor.key, visitor.username, visitor.type, visitor.lastVisitTimestamp, visitor.lastLoginTimestamp);
-        });
-    }
-
-    public update(visitor: Visitor): Promise<boolean> {
-        const self = this;
-        return co(function* () {
-            yield BaseRepository.sequelize.authenticate();
-
-            const existingVisitor = yield BaseRepository.models.Visitor.find({
-                where: {
-                    key: visitor.key,
-                },
-            });
-
-            if (!existingVisitor) {
-                return false;
-            }
-
-            existingVisitor.lastLoginTimestamp = visitor.lastLoginTimestamp;
-            existingVisitor.lastVisitTimestamp = visitor.lastVisitTimestamp;
-
-            yield existingVisitor.save();
-
-            return true;
-        });
+        return true;
     }
 }
