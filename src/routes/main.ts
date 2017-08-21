@@ -20,9 +20,9 @@ import { PostService } from './../services/post';
 import { Post } from './../entities/post';
 
 function getPostService(): PostService {
-    const host = argv.prod? config.production.database.host : config.development.database.host;
-    const username = argv.prod? config.production.database.username : config.development.database.username;
-    const password = argv.prod? config.production.database.password : config.development.database.password;
+    const host = argv.prod ? config.production.database.host : config.development.database.host;
+    const username = argv.prod ? config.production.database.username : config.development.database.username;
+    const password = argv.prod ? config.production.database.password : config.development.database.password;
     const postRepository = new PostRepository(host, username, password);
     const postService = new PostService(postRepository, argv.prod ? config.production.users : config.development.users, argv.prod ? config.production.github.username : config.development.github.username, argv.prod ? config.production.github.password : config.development.github.password, argv.prod ? config.production.domain : config.development.domain);
     return postService;

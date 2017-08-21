@@ -1,7 +1,7 @@
 // Imports
-import * as yargs from 'yargs';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as yargs from 'yargs';
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, './config.json'), 'utf8'));
 const argv = yargs.argv;
 

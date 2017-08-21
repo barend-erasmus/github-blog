@@ -1,6 +1,6 @@
 // Imports
-import MarkdownIt = require('markdown-it');
-import rp = require('request-promise');
+import * as MarkdownIt from 'markdown-it';
+import * as rp from 'request-promise';
 
 // Imports models
 import { Post } from './../entities/post';

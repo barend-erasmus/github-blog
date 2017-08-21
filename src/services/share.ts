@@ -1,5 +1,5 @@
 // Imports
-import rp = require('request-promise');
+import * as rp from 'request-promise';
 
 export class ShareService {
 

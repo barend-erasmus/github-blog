@@ -1,11 +1,11 @@
 // Imports
-import express = require("express");
 import * as cookieSession from 'cookie-session';
+import * as cron from 'cron';
+import * as express from 'express';
 import * as passport from 'passport';
 import * as GithubStrategy from 'passport-github';
 import * as GoogleStrategy from 'passport-google-oauth20';
 import * as LinkedInStrategy from 'passport-linkedin';
-import * as cron from 'cron';
 import * as yargs from 'yargs';
 
 import * as fs from 'fs';
@@ -21,12 +21,12 @@ import { PostService } from './services/post';
 import { VisitorService } from './services/visitor';
 
 // Imports middleware
-import expressWinston = require('express-winston');
-import exphbs = require('express-handlebars');
-import robots = require('express-robots');
+import * as exphbs from 'express-handlebars';
+import * as robots from 'express-robots';
+import * as expressWinston from 'express-winston';
 
 // Imports routes
-import mainRoute = require('./routes/main');
+import * as mainRoute from './routes/main';
 
 // Imports logger
 import { logger } from './logger';
