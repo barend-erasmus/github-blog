@@ -3,6 +3,7 @@ import { Express, Request, Response } from "express";
 import * as express from 'express';
 import * as request from 'request';
 import * as yargs from 'yargs';
+import * as RSS from 'rss';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -89,6 +90,37 @@ router.get('/projects/html-converter', (req: Request, res: Response, next: () =>
     res.render('./projects/html-converter', {
         description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
         title: 'HTML Converter',
+    });
+});
+
+router.get('/rss', (req: Request, res: Response, next: () => void) => {
+    const postService = getPostService();
+
+    postService.list().then((posts: Post[]) => {
+
+        const feed = new RSS({
+            title: 'Developer\'s workspace',
+            description: 'Cape Town, South Africa based Software Engineer sharing knowledge, experiences and ideas.',
+            feed_url: `${argv.prod ? config.production.domain : config.development.domain}/rss`,
+            site_url: `${argv.prod ? config.production.domain : config.development.domain}`,
+            webMaster: 'Barend Erasmus',
+
+        });
+
+        for (const post of posts) {
+            feed.item({
+                title: post.title,
+                description: post.description,
+                url: `${argv.prod ? config.production.domain : config.development.domain}/post/${post.key}`,
+                author: post.author,
+                date: post.publishedTimestamp,
+            });
+        }
+
+        const xml = feed.xml({indent: true});
+
+        res.setHeader('content-type', 'application/rss+xml');
+        res.send(xml);
     });
 });
 
