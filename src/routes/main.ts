@@ -36,7 +36,7 @@ router.get('/', (req: Request, res: Response, next: () => void) => {
 
     postService.list().then((posts: Post[]) => {
         res.render('home', {
-            description: 'Cape Town, South Africa based Software Engineer sharing knowledge, experiences and ideas.',
+            description: argv.prod ? config.production.pages.home.title : config.development.pages.home.title,
             posts,
             title: 'Home',
             user: req.user,
@@ -48,21 +48,14 @@ router.get('/about', (req: Request, res: Response, next: () => void) => {
     const postService = getPostService();
 
     res.render('about', {
-        description: 'What is Developer\'s Workspace all about? Developer\'s Workspace vision is to create MIT licensed software solution to allow developers to focus on their idea instead of other requirements such as authentication',
+        description: argv.prod ? config.production.pages.about.title : config.development.pages.about.title,
         title: 'About',
-    });
-});
-
-router.get('/projects', (req: Request, res: Response, next: () => void) => {
-    res.render('projects', {
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
-        title: 'Projects',
     });
 });
 
 router.get('/contact', (req: Request, res: Response, next: () => void) => {
     res.render('contact', {
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
+        description: argv.prod ? config.production.pages.contact.title : config.development.pages.contact.title,
         title: 'Contact',
     });
 });
@@ -79,32 +72,16 @@ router.get('/post/:id', (req: Request, res: Response, next: () => void) => {
     });
 });
 
-router.get('/projects/url-shortener', (req: Request, res: Response, next: () => void) => {
-    res.render('./projects/url-shortener', {
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
-        title: 'URL Shortener',
-    });
-});
-
-router.get('/projects/html-converter', (req: Request, res: Response, next: () => void) => {
-    res.render('./projects/html-converter', {
-        description: 'Developer\'s Workspace is always open to ideas, support and solutions. Feel free to contact us at any time.',
-        title: 'HTML Converter',
-    });
-});
-
 router.get('/rss', (req: Request, res: Response, next: () => void) => {
     const postService = getPostService();
 
     postService.list().then((posts: Post[]) => {
 
         const feed = new RSS({
-            title: 'Developer\'s workspace',
-            description: 'Cape Town, South Africa based Software Engineer sharing knowledge, experiences and ideas.',
+            title: argv.prod ? config.production.domain : config.development.domain,
+            description: argv.prod ? config.production.pages.about.title : config.development.pages.about.title,
             feed_url: `${argv.prod ? config.production.domain : config.development.domain}/rss`,
             site_url: `${argv.prod ? config.production.domain : config.development.domain}`,
-            webMaster: 'Barend Erasmus',
-
         });
 
         for (const post of posts) {
