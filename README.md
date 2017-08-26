@@ -78,6 +78,21 @@ Once you've setuped the database, you'll need to change some configuration in th
         }
     }
     ```
+* Pages
+
+    ```
+    "pages": {
+            "about": {
+                "title": "What is Developer's Workspace all about? Developer's Workspace vision is to create MIT licensed software solution to allow developers to focus on their idea instead of other requirements such as authentication"
+            },
+            "contact": {
+                "title": "Developer's Workspace is always open to ideas, support and solutions. Feel free to contact us at any time."
+            },
+            "home": {
+                "title": "Cape Town, South Africa based Software Engineer sharing knowledge, experiences and ideas."
+            }
+        },
+    ```
 
 * Scheduled Task
 
