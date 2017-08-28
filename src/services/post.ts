@@ -113,7 +113,7 @@ export class PostService {
         return;
     }
 
-    private getAuthorizationHeader(): string {
+    public getAuthorizationHeader(): string {
         return new Buffer(`${this.username}:${this.password}`).toString('base64');
     }
 }

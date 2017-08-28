@@ -7,6 +7,7 @@ import * as GithubStrategy from 'passport-github';
 import * as GoogleStrategy from 'passport-google-oauth20';
 import * as LinkedInStrategy from 'passport-linkedin';
 import * as yargs from 'yargs';
+import * as rp from 'request-promise';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -210,3 +211,24 @@ const job = new cron.CronJob(argv.prod ? config.production.scheduledTask.cron.pa
 }, null, true);
 
 job.start();
+
+
+const host = argv.prod ? config.production.database.host : config.development.database.host;
+const username = argv.prod ? config.production.database.username : config.development.database.username;
+const password = argv.prod ? config.production.database.password : config.development.database.password;
+const postRepository = new PostRepository(host, username, password);
+const postService = new PostService(postRepository, argv.prod ? config.production.users : config.development.users, argv.prod ? config.production.github.username : config.development.github.username, argv.prod ? config.production.github.password : config.development.github.password, argv.prod ? config.production.domain : config.development.domain);
+
+rp({
+    headers: {
+        'Authorization': `Basic ${postService.getAuthorizationHeader()}`,
+        'User-Agent': 'Request-Promise',
+    },
+    json: true,
+    uri: `https://api.github.com/users/${argv.prod ? config.production.users[0] : config.development.users[0]}/repos?page=1`,
+}).then(() => {
+    logger.info('Valid Github Credentials');
+}).catch((err: Error) => {
+    logger.error(err.message, err);
+    process.exit(-1);
+});
