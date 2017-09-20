@@ -7,6 +7,7 @@ import * as GithubStrategy from 'passport-github';
 import * as GoogleStrategy from 'passport-google-oauth20';
 import * as LinkedInStrategy from 'passport-linkedin';
 import * as yargs from 'yargs';
+import * as helmet from 'helmet';
 import * as rp from 'request-promise';
 
 import * as fs from 'fs';
@@ -52,7 +53,7 @@ export class WebApi {
 
     private configureMiddleware(app: express.Express) {
 
-        app.disable('x-powered-by');
+        app.use(helmet());
 
         // Configure view engine
         app.engine('handlebars', exphbs({
@@ -127,6 +128,11 @@ export class WebApi {
 
         // Configure static content
         app.use('/static', express.static(path.join(__dirname, 'public')));
+
+        app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+            res.removeHeader('X-Powered-By');
+            next();
+        });
     }
 
     private geVistorService(): VisitorService {
