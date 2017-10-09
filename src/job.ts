@@ -23,4 +23,5 @@ postRepository.sync().then(() => {
     return postService.scrapeGithub();
 }).then(() => {
     logger.info('PostService.scrapeGithub - Done');
+    postRepository.close();
 });

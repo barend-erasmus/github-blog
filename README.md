@@ -170,7 +170,8 @@ Create a `blog-data` file in the same directory as your `README.md` file with th
 {
     "title": "My Blog Post",
     "category": "My Blog Post Category",
-    "image": "http://via.placeholder.com/350x150"
+    "image": "http://via.placeholder.com/350x150",
+    "htmlPage": "https://mywebsite.com"
 }
 ```
 

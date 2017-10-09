@@ -32,10 +32,6 @@ export class PostService {
 
         const post = await this.postRepository.find(key);
 
-        const md = new MarkdownIt();
-
-        post.body = md.render(post.body);
-
         return post;
     }
 
@@ -76,7 +72,7 @@ export class PostService {
 
                     if (blogDataFile) {
 
-                        const htmlForBody: string = await rp({
+                        const rawReadmeBody: string = await rp({
                             headers: {
                                 'Authorization': `Basic ${this.getAuthorizationHeader()}`,
                                 'User-Agent': 'Request-Promise',
@@ -84,7 +80,10 @@ export class PostService {
                             uri: `${readmeFile.download_url}`,
                         });
 
-                        const htmlForBlogData: string = await rp({
+                        const md = new MarkdownIt();
+                        let htmlBody = md.render(rawReadmeBody);
+
+                        const rawBlogData: string = await rp({
                             headers: {
                                 'Authorization': `Basic ${this.getAuthorizationHeader()}`,
                                 'User-Agent': 'Request-Promise',
@@ -92,11 +91,21 @@ export class PostService {
                             uri: `${blogDataFile.download_url}`,
                         });
 
-                        const blogData = JSON.parse(htmlForBlogData);
+                        const blogData = JSON.parse(rawBlogData);
+
+                        if (blogData.htmlPage) {
+                            htmlBody = await rp({
+                                headers: {
+                                    'Authorization': `Basic ${this.getAuthorizationHeader()}`,
+                                    'User-Agent': 'Request-Promise',
+                                },
+                                uri: `${blogData.htmlPage}`,
+                            });
+                        }
 
                         const linkedInShareCount = await this.shareService.linkedIn(`${this.domain}/post/${repository.full_name.replace('/', '-at-')}`);
 
-                        const post = new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlForBody, blogData.image, blogData.category, repository.owner.login, repository.owner.avatar_url, repository.pushed_at, linkedInShareCount);
+                        const post = new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlBody, blogData.image, blogData.category, repository.owner.login, repository.owner.avatar_url, repository.pushed_at, linkedInShareCount);
                         const existingPost = await this.postRepository.find(post.key);
                         if (existingPost) {
                             await this.postRepository.update(post);
