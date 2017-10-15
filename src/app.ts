@@ -9,6 +9,8 @@ import * as LinkedInStrategy from 'passport-linkedin';
 import * as yargs from 'yargs';
 import * as helmet from 'helmet';
 import * as rp from 'request-promise';
+import * as StatsdClient from "statsd-client";
+import * as responseTime from 'response-time';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -35,6 +37,8 @@ import { logger } from './logger';
 
 const argv = yargs.argv;
 
+const statsdClient = new StatsdClient({ host: "open-stats.openservices.co.za", prefix: 'Github-Blog' });
+
 export class WebApi {
 
     constructor(private app: express.Express, private port: number) {
@@ -53,6 +57,7 @@ export class WebApi {
 
     private configureMiddleware(app: express.Express) {
 
+        // Configure Helmet
         app.use(helmet());
 
         // Configure view engine
@@ -64,8 +69,13 @@ export class WebApi {
         app.set('views', path.join(__dirname, 'views'));
         app.set('view engine', 'handlebars');
 
-        // Configure robots file
-        app.use(robots({ UserAgent: '*', Disallow: '' }));
+        // Configure stats
+        app.use(responseTime((req: express.Request, res: express.Response, time) => {
+            var stat = (req.method + req.url).toLowerCase()
+                .replace(/[:.]/g, '')
+                .replace(/\//g, '_');
+            statsdClient.timing(stat, time);
+        }))
 
         // Configure express-winston
         app.use(expressWinston.logger({
@@ -129,10 +139,14 @@ export class WebApi {
         // Configure static content
         app.use('/static', express.static(path.join(__dirname, 'public')));
 
+        // Configure robots file
+        app.use(robots({ UserAgent: '*', Disallow: '' }));
+
         app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
             res.removeHeader('X-Powered-By');
             next();
         });
+
     }
 
     private geVistorService(): VisitorService {
