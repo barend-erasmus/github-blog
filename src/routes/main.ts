@@ -2,8 +2,8 @@
 import { Express, Request, Response } from "express";
 import * as express from 'express';
 import * as request from 'request';
-import * as yargs from 'yargs';
 import * as RSS from 'rss';
+import * as yargs from 'yargs';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -78,19 +78,19 @@ router.get('/rss', (req: Request, res: Response, next: () => void) => {
     postService.list().then((posts: Post[]) => {
 
         const feed = new RSS({
-            title: argv.prod ? config.production.domain : config.development.domain,
             description: argv.prod ? config.production.pages.about.title : config.development.pages.about.title,
             feed_url: `${argv.prod ? config.production.domain : config.development.domain}/rss`,
             site_url: `${argv.prod ? config.production.domain : config.development.domain}`,
+            title: argv.prod ? config.production.domain : config.development.domain,
         });
 
         for (const post of posts) {
             feed.item({
-                title: post.title,
-                description: post.description,
-                url: `${argv.prod ? config.production.domain : config.development.domain}/post/${post.key}`,
                 author: post.author,
                 date: post.publishedTimestamp,
+                description: post.description,
+                title: post.title,
+                url: `${argv.prod ? config.production.domain : config.development.domain}/post/${post.key}`,
             });
         }
 

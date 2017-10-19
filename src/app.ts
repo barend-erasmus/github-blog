@@ -2,15 +2,15 @@
 import * as cookieSession from 'cookie-session';
 import * as cron from 'cron';
 import * as express from 'express';
+import * as helmet from 'helmet';
 import * as passport from 'passport';
 import * as GithubStrategy from 'passport-github';
 import * as GoogleStrategy from 'passport-google-oauth20';
 import * as LinkedInStrategy from 'passport-linkedin';
-import * as yargs from 'yargs';
-import * as helmet from 'helmet';
 import * as rp from 'request-promise';
-import * as StatsdClient from "statsd-client";
 import * as responseTime from 'response-time';
+import * as StatsdClient from "statsd-client";
+import * as yargs from 'yargs';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -37,7 +37,7 @@ import { logger } from './logger';
 
 const argv = yargs.argv;
 
-const statsdClient = new StatsdClient({ host: "open-stats.openservices.co.za", prefix: 'Github-Blog' });
+const statsdClient = new StatsdClient({ host: "open-stats.openservices.co.za" });
 
 export class WebApi {
 
@@ -71,11 +71,24 @@ export class WebApi {
 
         // Configure stats
         app.use(responseTime((req: express.Request, res: express.Response, time) => {
-            var stat = (req.method + req.url).toLowerCase()
-                .replace(/[:.]/g, '')
-                .replace(/\//g, '_');
-            statsdClient.timing(stat, time);
-        }))
+            statsdClient.timing('HTTPResponseTime', time, {
+                application: 'Github-Blog',
+                method: req.method,
+                statusCode: res.statusCode,
+                token: '999d208e-bd31-4294-b2b8-acb777bac30a',
+                url: req.url,
+
+            });
+
+            statsdClient.counter('HTTPRequest', 1, {
+                application: 'Github-Blog',
+                method: req.method,
+                statusCode: res.statusCode,
+                token: '999d208e-bd31-4294-b2b8-acb777bac30a',
+                url: req.url,
+
+            });
+        }));
 
         // Configure express-winston
         app.use(expressWinston.logger({
@@ -232,16 +245,20 @@ const job = new cron.CronJob(argv.prod ? config.production.scheduledTask.cron.pa
 
 job.start();
 
-
-const host = argv.prod ? config.production.database.host : config.development.database.host;
-const username = argv.prod ? config.production.database.username : config.development.database.username;
-const password = argv.prod ? config.production.database.password : config.development.database.password;
-const postRepository = new PostRepository(host, username, password);
-const postService = new PostService(postRepository, argv.prod ? config.production.users : config.development.users, argv.prod ? config.production.github.username : config.development.github.username, argv.prod ? config.production.github.password : config.development.github.password, argv.prod ? config.production.domain : config.development.domain);
+const jobPostService = new PostService(
+    new PostRepository(
+        argv.prod ? config.production.database.host : config.development.database.host,
+        argv.prod ? config.production.database.username : config.development.database.username,
+        argv.prod ? config.production.database.password : config.development.database.password,
+    ),
+    argv.prod ? config.production.users : config.development.users,
+    argv.prod ? config.production.github.username : config.development.github.username,
+    argv.prod ? config.production.github.password : config.development.github.password,
+    argv.prod ? config.production.domain : config.development.domain);
 
 rp({
     headers: {
-        'Authorization': `Basic ${postService.getAuthorizationHeader()}`,
+        'Authorization': `Basic ${jobPostService.getAuthorizationHeader()}`,
         'User-Agent': 'Request-Promise',
     },
     json: true,
