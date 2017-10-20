@@ -14,6 +14,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/main.min.css">
 
+    <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+    <link rel="apple-touch-icon" href="/static/img/favicon.ico">
+    <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" sizes="196x196" href="/static/img/favicon.ico">
+
     <!--[if lt IE 9]>
             <script src="/js/vendor/html5shiv.min.js"></script>
         <![endif]-->
@@ -47,14 +55,29 @@
     <noscript>
         <div class="no-js-menu">
             <ul>
-                <li><i class="fa fa-home"></i><a href="/">Home</a></li>
-                <li><i class="fa fa-building"></i><a href="/about">About</a></li>
-                <li><i class="fa fa-paper-plane"></i><a href="/contact">Contact</a></li>
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <i class="fa fa-building"></i>
+                    <a href="/about">About</a>
+                </li>
+                <li>
+                    <i class="fa fa-paper-plane"></i>
+                    <a href="/contact">Contact</a>
+                </li>
             </ul>
             <hr>
             <ul>
-                <li><i class="fa fa-github"></i><a href="https://github.com/developersworkspace">Github (developersworkspace)</a></li>
-                <li><i class="fa fa-github"></i><a href="https://github.com/barend-erasmus">Github (barend-erasmus)</a></li>
+                <li>
+                    <i class="fa fa-github"></i>
+                    <a href="https://github.com/developersworkspace">Github (developersworkspace)</a>
+                </li>
+                <li>
+                    <i class="fa fa-github"></i>
+                    <a href="https://github.com/barend-erasmus">Github (barend-erasmus)</a>
+                </li>
             </ul>
         </div>
     </noscript>
