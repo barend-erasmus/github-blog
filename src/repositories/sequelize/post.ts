@@ -11,8 +11,6 @@ export class PostRepository extends BaseRepository {
     }
 
     public async insert(post: Post): Promise<boolean> {
-        await BaseRepository.sequelize.authenticate();
-
         await BaseRepository.models.Post.create({
             author: post.author,
             authorImage: post.authorImage,
@@ -30,8 +28,6 @@ export class PostRepository extends BaseRepository {
     }
 
     public async find(key: string): Promise<Post> {
-        await BaseRepository.sequelize.authenticate();
-
         const post: any = await BaseRepository.models.Post.find({
             where: {
                 key,
@@ -46,8 +42,6 @@ export class PostRepository extends BaseRepository {
     }
 
     public async update(post: Post): Promise<boolean> {
-        await BaseRepository.sequelize.authenticate();
-
         const existingPost: any = await BaseRepository.models.Post.find({
             where: {
                 key: post.key,
@@ -74,7 +68,6 @@ export class PostRepository extends BaseRepository {
     }
 
     public async list(): Promise<Post[]> {
-        await BaseRepository.sequelize.authenticate();
 
         const posts: any[] = await BaseRepository.models.Post.findAll({
             order: [

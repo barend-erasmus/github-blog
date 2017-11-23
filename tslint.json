@@ -1,12 +1,8 @@
 {
-  "extends": "tslint:latest",
+  "extends": "tslint:recommended",
   "defaultSeverity": "error",
   "rules": {
     "quotemark": "single",
-    "max-line-length": 150,
-    "no-this-assignment": false,
-    "space-before-function-paren": false,
-    "no-unused-expression": false,
-    "no-bitwise": false
+    "max-line-length": 150
   }
 }

@@ -3,7 +3,7 @@ import * as Sequelize from 'sequelize';
 
 export class BaseRepository {
     protected static sequelize: Sequelize.Sequelize = null;
-    protected static models: { Post: Sequelize.Model<{}, {}>, Visitor: Sequelize.Model<{}, {}> } = null;
+    protected static models: { Post: Sequelize.Model<{}, {}>, Word: Sequelize.Model<{}, {}> } = null;
 
     private static defineModels(): void {
         const Post = BaseRepository.sequelize.define('post', {
@@ -49,32 +49,23 @@ export class BaseRepository {
             },
         });
 
-        const Visitor = BaseRepository.sequelize.define('visitor', {
-            key: {
+        const Word = BaseRepository.sequelize.define('word', {
+            count: {
                 allowNull: false,
-                type: Sequelize.STRING,
+                type: Sequelize.NUMERIC,
             },
-            lastLoginTimestamp: {
-                allowNull: false,
-                type: Sequelize.DATEONLY,
-            },
-            lastVisitTimestamp: {
-                allowNull: false,
-                type: Sequelize.DATEONLY,
-            },
-            type: {
-                allowNull: false,
-                type: Sequelize.STRING,
-            },
-            username: {
+            text: {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
         });
 
+        Post.hasMany(Word, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+        Word.belongsTo(Post, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+
         this.models = {
             Post,
-            Visitor,
+            Word,
         };
     }
 
@@ -84,6 +75,7 @@ export class BaseRepository {
             BaseRepository.sequelize = new Sequelize('github-blog-db', username, password, {
                 dialect: 'postgres',
                 host,
+                logging: false,
                 pool: {
                     idle: 10000,
                     max: 5,

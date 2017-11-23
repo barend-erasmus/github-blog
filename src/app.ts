@@ -3,13 +3,7 @@ import * as cookieSession from 'cookie-session';
 import * as cron from 'cron';
 import * as express from 'express';
 import * as helmet from 'helmet';
-import * as passport from 'passport';
-import * as GithubStrategy from 'passport-github';
-import * as GoogleStrategy from 'passport-google-oauth20';
-import * as LinkedInStrategy from 'passport-linkedin';
 import * as rp from 'request-promise';
-import * as responseTime from 'response-time';
-import * as StatsdClient from "statsd-client";
 import * as yargs from 'yargs';
 
 import * as fs from 'fs';
@@ -18,11 +12,10 @@ const config = JSON.parse(fs.readFileSync(path.join(__dirname, './config.json'),
 
 // Imports repositories
 import { PostRepository } from './repositories/sequelize/post';
-import { VisitorRepository } from './repositories/sequelize/visitor';
+import { WordRepository } from './repositories/sequelize/word';
 
 // Imports services
 import { PostService } from './services/post';
-import { VisitorService } from './services/visitor';
 
 // Imports middleware
 import * as exphbs from 'express-handlebars';
@@ -36,8 +29,6 @@ import * as mainRoute from './routes/main';
 import { logger } from './logger';
 
 const argv = yargs.argv;
-
-const statsdClient = new StatsdClient({ host: "open-stats.openservices.co.za" });
 
 export class WebApi {
 
@@ -69,27 +60,6 @@ export class WebApi {
         app.set('views', path.join(__dirname, 'views'));
         app.set('view engine', 'handlebars');
 
-        // Configure stats
-        app.use(responseTime((req: express.Request, res: express.Response, time) => {
-            statsdClient.timing('HTTPResponseTime', time, {
-                application: 'Github-Blog',
-                method: req.method,
-                statusCode: res.statusCode,
-                token: '999d208e-bd31-4294-b2b8-acb777bac30a',
-                url: req.url,
-
-            });
-
-            statsdClient.counter('HTTPRequest', 1, {
-                application: 'Github-Blog',
-                method: req.method,
-                statusCode: res.statusCode,
-                token: '999d208e-bd31-4294-b2b8-acb777bac30a',
-                url: req.url,
-
-            });
-        }));
-
         // Configure express-winston
         app.use(expressWinston.logger({
             dynamicMeta: (req: express.Request, res: express.Response) => {
@@ -100,53 +70,6 @@ export class WebApi {
             meta: true,
             msg: 'HTTP Request: {{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}',
             winstonInstance: logger,
-        }));
-
-        // Configures session
-        app.use(cookieSession({
-            keys: ['J#Z!AL6ZbZ3kzPCJ'],
-            maxAge: 604800000, // 7 Days
-            name: 'session',
-        }));
-
-        // Configure passport
-        app.use(passport.initialize());
-
-        passport.serializeUser((user: any, done: (err: Error, obj: any) => void) => {
-            done(null, user.displayName);
-        });
-
-        passport.deserializeUser((id: Error, done: (err: Error, obj: any) => void) => {
-            done(null, id);
-        });
-
-        app.use(passport.session());
-
-        passport.use(new LinkedInStrategy({
-            callbackURL: argv.prod ? config.production.oauth2.linkedIn.callback : config.development.oauth2.linkedIn.callback,
-            consumerKey: argv.prod ? config.production.oauth2.linkedIn.clientId : config.development.oauth2.linkedIn.clientId,
-            consumerSecret: argv.prod ? config.production.oauth2.linkedIn.clientSecret : config.development.oauth2.linkedIn.clientSecret,
-        }, async (token: string, tokenSecret: string, profile: any, done: (err: Error, obj: any) => void) => {
-            await this.geVistorService().login(profile.id, profile.displayName, 'LinkedIn');
-            return done(null, profile);
-        }));
-
-        passport.use(new GoogleStrategy({
-            callbackURL: argv.prod ? config.production.oauth2.google.callback : config.development.oauth2.google.callback,
-            clientID: argv.prod ? config.production.oauth2.google.clientId : config.development.oauth2.google.clientId,
-            clientSecret: argv.prod ? config.production.oauth2.google.clientSecret : config.development.oauth2.google.clientSecret,
-        }, async (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
-            await this.geVistorService().login(profile.id, profile.displayName, 'Google');
-            return done(null, profile);
-        }));
-
-        passport.use(new GithubStrategy({
-            callbackURL: argv.prod ? config.production.oauth2.github.callback : config.development.oauth2.github.callback,
-            clientID: argv.prod ? config.production.oauth2.github.clientId : config.development.oauth2.github.clientId,
-            clientSecret: argv.prod ? config.production.oauth2.github.clientSecret : config.development.oauth2.github.clientSecret,
-        }, async (accessToken: string, refreshToken: string, profile: any, done: (err: Error, obj: any) => void) => {
-            await this.geVistorService().login(profile.id, profile.displayName, 'Github');
-            return done(null, profile);
         }));
 
         // Configure static content
@@ -162,60 +85,8 @@ export class WebApi {
 
     }
 
-    private geVistorService(): VisitorService {
-        const host = argv.prod ? config.production.database.host : config.development.database.host;
-        const username = argv.prod ? config.production.database.username : config.development.database.username;
-        const password = argv.prod ? config.production.database.password : config.development.database.password;
-        const visitorRepository = new VisitorRepository(host, username, password);
-        const visitorService = new VisitorService(visitorRepository);
-        return visitorService;
-    }
-
     private configureRoutes(app: express.Express) {
         app.use("/", mainRoute);
-
-        app.get('/auth/linkedin', passport.authenticate('linkedin', {
-            failureRedirect: '/',
-            session: true,
-            successRedirect: '/',
-        }));
-
-        app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
-            failureRedirect: '/',
-            session: true,
-            successRedirect: '/',
-        }), (req: express.Request, res: express.Response) => {
-            res.redirect('/');
-        });
-
-        app.get('/auth/google', passport.authenticate('google', {
-            failureRedirect: '/',
-            scope: ['profile'],
-            session: true,
-            successRedirect: '/',
-        }));
-
-        app.get('/auth/google/callback', passport.authenticate('google', {
-            failureRedirect: '/',
-            session: true,
-            successRedirect: '/',
-        }), (req: express.Request, res: express.Response) => {
-            res.redirect('/');
-        });
-
-        app.get('/auth/github', passport.authenticate('github', {
-            failureRedirect: '/',
-            session: true,
-            successRedirect: '/',
-        }));
-
-        app.get('/auth/github/callback', passport.authenticate('github', {
-            failureRedirect: '/',
-            session: true,
-            successRedirect: '/',
-        }), (req: express.Request, res: express.Response) => {
-            res.redirect('/');
-        });
     }
 
     private configureErrorHandling(app: express.Express) {
@@ -231,12 +102,13 @@ const api = new WebApi(express(), argv.port || 3000);
 api.run();
 logger.info(`listening on ${argv.port || 3000}`);
 
-const job = new cron.CronJob(argv.prod ? config.production.scheduledTask.cron.pattern : config.development.scheduledTask.cron.pattern, () => {
-    const host = argv.prod ? config.production.database.host : config.development.database.host;
-    const username = argv.prod ? config.production.database.username : config.development.database.username;
-    const password = argv.prod ? config.production.database.password : config.development.database.password;
+const job = new cron.CronJob(config.scheduledTask.cron.pattern, () => {
+    const host = config.database.host;
+    const username = config.database.username;
+    const password = config.database.password;
     const postRepository = new PostRepository(host, username, password);
-    const postService = new PostService(postRepository, argv.prod ? config.production.users : config.development.users, argv.prod ? config.production.github.username : config.development.github.username, argv.prod ? config.production.github.password : config.development.github.password, argv.prod ? config.production.domain : config.development.domain);
+    const wordRepository = new WordRepository(host, username, password);
+    const postService = new PostService(postRepository, wordRepository, config.users, config.github.username, config.github.password, config.domain);
 
     postService.scrapeGithub().then(() => {
         logger.info('PostService.scrapeGithub - Done');
@@ -247,14 +119,19 @@ job.start();
 
 const jobPostService = new PostService(
     new PostRepository(
-        argv.prod ? config.production.database.host : config.development.database.host,
-        argv.prod ? config.production.database.username : config.development.database.username,
-        argv.prod ? config.production.database.password : config.development.database.password,
+        config.database.host,
+        config.database.username,
+        config.database.password,
     ),
-    argv.prod ? config.production.users : config.development.users,
-    argv.prod ? config.production.github.username : config.development.github.username,
-    argv.prod ? config.production.github.password : config.development.github.password,
-    argv.prod ? config.production.domain : config.development.domain);
+    new WordRepository(
+        config.database.host,
+        config.database.username,
+        config.database.password,
+    ),
+    config.users,
+    config.github.username,
+    config.github.password,
+    config.domain);
 
 rp({
     headers: {
@@ -262,7 +139,7 @@ rp({
         'User-Agent': 'Request-Promise',
     },
     json: true,
-    uri: `https://api.github.com/users/${argv.prod ? config.production.users[0] : config.development.users[0]}/repos?page=1`,
+    uri: `https://api.github.com/users/${config.users[0]}/repos?page=1`,
 }).then(() => {
     logger.info('Valid Github Credentials');
 }).catch((err: Error) => {

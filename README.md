@@ -54,30 +54,7 @@ Once you've setuped the database, you'll need to change some configuration in th
         "username": "your Github username"
     }
     ```
-
-* OAuth 2
-
-    This section defines your OAuth2 details for Github, Google and LinkendIn. This is the only supported OAuth2 providers.
-
-    ```
-    "oauth2": {
-        "github": {
-            "callback": "http://yourdomain.com/auth/github/callback",
-            "clientId": "your client id",
-            "clientSecret": "your client secret"
-        },
-        "google": {
-            "callback": "http://yourdomain.com/auth/google/callback",
-            "clientId": "your client id",
-            "clientSecret": "your client secret"
-        },
-        "linkedIn": {
-            "callback": "http://yourdomain.com/auth/linkedin/callback",
-            "clientId": "your client id",
-            "clientSecret": "your client secret"
-        }
-    }
-    ```
+    
 * Pages
 
     ```

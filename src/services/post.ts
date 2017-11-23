@@ -7,6 +7,7 @@ import { Post } from './../entities/post';
 
 // Imports interfaces
 import { IPostRepository } from './../repositories/post';
+import { IWordRepository } from './../repositories/word';
 
 // Import services
 import { ShareService } from './share';
@@ -15,7 +16,7 @@ export class PostService {
 
     private shareService = new ShareService();
 
-    constructor(private postRepository: IPostRepository, private users: string[], private username: string, private password: string, private domain: string) {
+    constructor(private postRepository: IPostRepository, private wordRepository: IWordRepository, private users: string[], private username: string, private password: string, private domain: string) {
 
     }
 
@@ -30,7 +31,38 @@ export class PostService {
 
     public async find(key: string): Promise<Post> {
 
-        const post = await this.postRepository.find(key);
+        const post: Post = await this.postRepository.find(key);
+
+        return post;
+    }
+
+    public async create(post: Post): Promise<Post> {
+
+        const existingPost: Post = await this.postRepository.find(post.key);
+
+        if (existingPost) {
+            await this.postRepository.update(post);
+        } else {
+            await this.postRepository.insert(post);
+        }
+
+        // const text: string = post.body.replace(/<(?:.|\n)*?>/gm, '').replace(/\n/g, ' ');;
+
+        // const words: {} = {};
+
+        // for (const word of text.split(' ')) {
+        //     if (words[word]) {
+        //         words[word] = words[word] + 1;
+        //     } else {
+        //         words[word] = 1;
+        //     }
+        // }
+
+        // for (const word of Object.keys(words)) {
+        //     if (word && word.length > 2) {
+        //         await this.wordRepository.insert(post.key, word.toLowerCase(), words[word]);
+        //     }
+        // }
 
         return post;
     }
@@ -106,12 +138,8 @@ export class PostService {
                         const linkedInShareCount = await this.shareService.linkedIn(`${this.domain}/post/${repository.full_name.replace('/', '-at-')}`);
 
                         const post = new Post(repository.full_name.replace('/', '-at-'), blogData.title, repository.description, htmlBody, blogData.image, blogData.category, repository.owner.login, repository.owner.avatar_url, repository.pushed_at, linkedInShareCount);
-                        const existingPost = await this.postRepository.find(post.key);
-                        if (existingPost) {
-                            await this.postRepository.update(post);
-                        } else {
-                            await this.postRepository.insert(post);
-                        }
+
+                        await this.create(post);
                     }
                 }
 

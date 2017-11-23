@@ -7,6 +7,7 @@ const argv = yargs.argv;
 
 // Imports repositories
 import { PostRepository } from './repositories/sequelize/post';
+import { WordRepository } from './repositories/sequelize/word';
 
 // Imports services
 import { PostService } from './services/post';
@@ -14,11 +15,13 @@ import { PostService } from './services/post';
 // Imports logger
 import { logger } from './logger';
 
-const host = argv.prod ? config.production.database.host : config.development.database.host;
-const username = argv.prod ? config.production.database.username : config.development.database.username;
-const password = argv.prod ? config.production.database.password : config.development.database.password;
+const host = config.database.host;
+const username = config.database.username;
+const password = config.database.password;
 const postRepository = new PostRepository(host, username, password);
-const postService = new PostService(postRepository, argv.prod ? config.production.users : config.development.users, argv.prod ? config.production.github.username : config.development.github.username, argv.prod ? config.production.github.password : config.development.github.password, argv.prod ? config.production.domain : config.development.domain);
+const wordRepository = new WordRepository(host, username, password);
+const postService = new PostService(postRepository, wordRepository, config.users, config.github.username, config.github.password, config.domain);
+
 postRepository.sync().then(() => {
     return postService.scrapeGithub();
 }).then(() => {
