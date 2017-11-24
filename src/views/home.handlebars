@@ -2,21 +2,36 @@
     <div class="row">
         <div id="menu-target">
             <ul>
-                <li><i class="fa fa-home"></i><a href="/">Home</a></li>
-                <li><i class="fa fa-building"></i><a href="/about">About</a></li>
-                <li><i class="fa fa-paper-plane"></i><a href="/contact">Contact</a></li>
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <i class="fa fa-building"></i>
+                    <a href="/about">About</a>
+                </li>
+                <li>
+                    <i class="fa fa-paper-plane"></i>
+                    <a href="/contact">Contact</a>
+                </li>
             </ul>
             <hr>
             <ul>
-                <li><i class="fa fa-github"></i><a href="https://github.com/developersworkspace">Github (developersworkspace)</a></li>
-                <li><i class="fa fa-github"></i><a href="https://github.com/barend-erasmus">Github (barend-erasmus)</a></li>
+                <li>
+                    <i class="fa fa-github"></i>
+                    <a href="https://github.com/developersworkspace">Github (developersworkspace)</a>
+                </li>
+                <li>
+                    <i class="fa fa-github"></i>
+                    <a href="https://github.com/barend-erasmus">Github (barend-erasmus)</a>
+                </li>
             </ul>
         </div>
         <section class="sidebar col-md-5 col-sm-12" style="background-image: url(/static/img/default-sidebar.jpg">
             <span class="menu-trigger animated fadeInDown">
-                        <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
             </span>
             <div class="site-info">
                 <div class="primary-info">
@@ -30,10 +45,20 @@
                 <a href="#" class="select-posts active">Posts</a>
             </div>
             <div class="home-page-posts animated fadeIn">
+                <form action="/" method="get">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="q">Search for posts here:</label>
+                            <input type="text" class="form-control" name="q" id="q" placeholder="Keywords...">
+                        </div>
+                    </div>
+                </form>
                 {{#each posts as |value key|}}
                 <article class="post">
                     <div class="post-preview col-xs-10  no-gutter">
-                        <h2><a href="/post/{{value.key}}">{{value.title}}</a></h2>
+                        <h2>
+                            <a href="/post/{{value.key}}">{{value.title}}</a>
+                        </h2>
                         <p>{{value.description}}</p>
                         <p class="meta">
                             <a href="#">{{value.author}} at {{value.displayTimestamp}}</a>

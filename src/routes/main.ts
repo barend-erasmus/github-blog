@@ -36,7 +36,7 @@ const router = express.Router();
 router.get('/', async (req: Request, res: Response, next: () => void) => {
     const postService = getPostService();
 
-    const posts: Post[] = await postService.list();
+    const posts: Post[] = req.query.q? await postService.search(req.query.q) : await postService.list();
 
     res.render('home', {
         description: config.pages.home.title,

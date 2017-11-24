@@ -36,6 +36,31 @@ export class PostService {
         return post;
     }
 
+    public async search(query: string): Promise<Post[]> {
+
+        const words: string[] = query.split(' ');
+
+        const results: {} = {};
+
+        for (const word of words) {
+            const wordResult: {} = await this.wordRepository.find(word);
+
+            for (const key of Object.keys(wordResult)) {
+                if (results[key]) {
+                    results[key].count = results[key].count + wordResult[key].count;
+                } else {
+                    results[key] = wordResult[key];
+                }
+            }
+        }
+
+        const keys: string[] = Object.keys(results).sort((a, b) => {
+            return results[b].count - results[a].count;
+        });
+
+        return keys.map((x) => results[x].post);
+    }
+
     public async create(post: Post): Promise<Post> {
 
         const existingPost: Post = await this.postRepository.find(post.key);
@@ -46,23 +71,28 @@ export class PostService {
             await this.postRepository.insert(post);
         }
 
-        // const text: string = post.body.replace(/<(?:.|\n)*?>/gm, '').replace(/\n/g, ' ');;
+        const words: {} = {};
 
-        // const words: {} = {};
+        post.body.replace(new RegExp(/[a-zA-Z]+/g), (match: string) => {
+            if (words[match]) {
+                words[match] = words[match] + 1;
+            } else {
+                words[match] = 1;
+            }
 
-        // for (const word of text.split(' ')) {
-        //     if (words[word]) {
-        //         words[word] = words[word] + 1;
-        //     } else {
-        //         words[word] = 1;
-        //     }
-        // }
+            return null;
+        });
 
-        // for (const word of Object.keys(words)) {
-        //     if (word && word.length > 2) {
-        //         await this.wordRepository.insert(post.key, word.toLowerCase(), words[word]);
-        //     }
-        // }
+
+        for (const word of Object.keys(words)) {
+            if (word && word.length > 2) {
+                try {
+                    await this.wordRepository.insert(post.key, word.toLowerCase(), words[word]);
+                } catch (err) {
+
+                }
+            }
+        }
 
         return post;
     }

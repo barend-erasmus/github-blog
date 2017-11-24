@@ -47,8 +47,22 @@ export class WordRepository extends BaseRepository {
         const result: {} = {};
 
         for (const item of words) {
-           result[item.post.key] = item.count;
-       }
+            result[item.post.key] = {
+                count: item.count,
+                post: new Post(
+                    item.post.key,
+                    item.post.title,
+                    item.post.description,
+                    item.post.body,
+                    item.post.image,
+                    item.post.category,
+                    item.post.author,
+                    item.post.authorImage,
+                    item.post.publishedTimestamp,
+                    item.post.linkedInShareCount,
+                )
+            };
+        }
 
         return result;
     }
