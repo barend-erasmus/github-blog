@@ -72,7 +72,7 @@ export class BaseRepository {
     constructor(private host: string, private username: string, private password: string) {
 
         if (!BaseRepository.sequelize) {
-            BaseRepository.sequelize = new Sequelize('github-blog-db', username, password, {
+            BaseRepository.sequelize = new Sequelize('github-blog', username, password, {
                 dialect: 'postgres',
                 host,
                 logging: false,
